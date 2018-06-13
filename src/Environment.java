@@ -6,54 +6,27 @@ import java.util.ArrayList;
 
 public class Environment implements Cloneable {
 
-    ArrayList<Projectile> projectiles = new ArrayList<>();
-    ArrayList<Hero> heroes = new ArrayList<>();
-    ArrayList<Test> tests = new ArrayList<>();
+    PApplet p;
 
-    void addProjectile(PVector position, float theta, PVector velocity) {
-        projectiles.add(new Projectile(position, theta, velocity));
+    public ArrayList<Hero> heroes = new ArrayList<Hero>();
+    ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
+
+    public void setup(PApplet p) {
+        this.p = p;
+        buildHeros();
     }
 
-    void addProjectile() {
-        projectiles.add(new Projectile(this));
-    }
 
-    void addHero() {
-        heroes.add(new Hero());
-    }
-
-    void addTest() {
-        tests.add(new Test(5));
-    }
-
-    public Environment clone() {
-        Environment c = new Environment();
-        for (Hero i : heroes) {
-            c.heroes.add(i.clone());
-        }
-        for (Projectile i : projectiles) {
-            c.projectiles.add(i.clone());
-        }
-        return c;
-    }
-
-    public void tick(PVector mouse) {
-        Environment before = Environment.this.clone();
-        for (Hero i : heroes) {
-            i.seek(mouse);
-            i.tick(before);
-        }
-        for (Projectile i : projectiles) {
-            i.tick(before);
-        }
-        for (Test i : tests) {
-            i.tick(before);
+    void buildHeros() {
+        for(int x = 0; x <= 2; ++x) {
+            heroes.add(new Hero());
         }
     }
 
-    void shoot() {
-        for (Hero i : heroes) {
-            i.shoot(this);
+    public void tick(PVector mouseLoc) {
+        for (Hero i: heroes) {
+            i.seek(mouseLoc);
+            i.tick(p);
         }
     }
 

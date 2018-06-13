@@ -1,33 +1,26 @@
 import processing.core.PApplet;
 import processing.core.PVector;
 
+import java.io.Serializable;
+
 public class Projectile {
-    Environment e;
-    PVector position;
+    private Display d;
+    public PVector position;
     private PVector velocity;
-    float theta;
+    private float theta;
     private int health = 100;
 
-//    Projectile(PVector pos, float direction, PVector v){
-//        this.position = pos;
-//        this.theta = direction;
-//        this.velocity = PVector.random2D();
-//    }
-
-    Projectile(Environment e){
-        this.e = e;
-        this.position = e.heroes.get(0).getPosition();
-        this.velocity = e.heroes.get(0).getVelocity();
-        this.theta = e.heroes.get(0).getTheta();
+    Projectile(PVector pos, PVector v, float theta){
+        d = new Display();
+        this.position = pos;
+        this.theta = theta;
+        this.velocity = v;
     }
 
-    public Projectile clone() {
-        //return new Projectile(position, theta, velocity);
-        return new Projectile(e);
-    }
-
-    void tick() {
-
+    void tick(PApplet p) {
+        this.position.add(velocity);
+        d.drawProjectile(p, position);
+        System.out.println(velocity);
     }
 
     boolean lifeCheck() {
@@ -36,18 +29,6 @@ public class Projectile {
         } else {
             return true;
         }
-    }
-
-    void setPosition(PVector pos) {
-        this.position = pos;
-    }
-
-    void setVelocity(PVector v) {
-        this.velocity = v;
-    }
-
-    void setTheta(float t) {
-        this.theta = t;
     }
 
 }
