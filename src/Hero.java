@@ -1,17 +1,16 @@
 import processing.core.PApplet;
 import processing.core.PVector;
 import java.io.*;
-
 import java.util.ArrayList;
 
-class Hero implements Cloneable, Serializable {
-    ArrayList<Projectile> projectiles = new ArrayList<>();
+class Hero implements Serializable {
+    private ArrayList<Projectile> projectiles = new ArrayList<>();
     private PVector position;
     private PVector velocity;
     private PVector acceleration;
     private Display d = new Display();
-    protected float theta;
-    protected float r;
+    private float theta;
+    private float r;
     private float maxForce;
     private float maxSpeed;
 
@@ -24,7 +23,7 @@ class Hero implements Cloneable, Serializable {
         maxForce = 0.1f;
     }
 
-    Hero(PVector position, PVector velocity, float theta) {
+    private Hero(PVector position, PVector velocity, float theta) {
         acceleration = new PVector(0, 0);
         this.velocity = velocity;
         this.position = position;
@@ -40,9 +39,13 @@ class Hero implements Cloneable, Serializable {
         for (Projectile bullet : projectiles) {
             bullet.tick(p);
         }
+        for (Projectile i: projectiles) {
+            d.drawProjectile(p, i.getPosition(), i.getTheta());
+        }
+
     }
 
-    void movement() {
+    private void movement() {
         theta = velocity.heading() + (float) (3.14 / 2);
         velocity.add(acceleration);
         velocity.limit(maxSpeed);
@@ -50,23 +53,7 @@ class Hero implements Cloneable, Serializable {
         acceleration.mult(0);
     }
 
-//    void shoot() {
-//        try {
-//            Hero hCopy = (Hero) super.clone();
-//            //Hero hCopy = (Hero) this.clone();
-//            //hCopy.setPosition((Hero)hCopy.getPosition().clone());
-//            PVector bPos = hCopy.getPosition();
-//            PVector bVel = hCopy.getVelocity();
-//            float bTheta = hCopy.getTheta();
-//            projectiles.add(new Projectile(bPos, bVel, bTheta));
-//            //Projectile bullet = new Projectile(bPos, bVel, bTheta);
-//        } catch (CloneNotSupportedException c) {
-//            System.out.print("hi");
-//        }
-//    }
-
     void shoot() {
-        //Hero hCopy = new this.clone();
         Hero hCopy = (Hero)deepClone(this);
         PVector bPos = hCopy.getPosition();
         PVector bVel = hCopy.getVelocity();
@@ -74,11 +61,7 @@ class Hero implements Cloneable, Serializable {
         projectiles.add(new Projectile(bPos, bVel, bTheta));
     }
 
-
-
-
-
-    void applyForce(PVector force) {
+    private void applyForce(PVector force) {
         acceleration.add(force);
     }
 
@@ -90,44 +73,19 @@ class Hero implements Cloneable, Serializable {
         applyForce(steer);
     }
 
-    public PVector getVelocity() {
+    PVector getVelocity() {
         return velocity;
     }
 
-    public PVector getPosition() {
+    PVector getPosition() {
         return position;
     }
 
-    public float getTheta() {
+    float getTheta() {
         return theta;
     }
 
-    public void setVelocity(PVector velocity) {
-        this.velocity = velocity;
-    }
-
-    public void setPosition(PVector position) {
-        this.position = position;
-    }
-
-    public void setTheta(float theta) {
-        this.theta = theta;
-    }
-
-    @Override
-    public Object clone() {
-        Hero user = null;
-        try {
-            user = (Hero) super.clone();
-        } catch (CloneNotSupportedException e) {
-            user = new Hero(
-                    this.getPosition(), this.getVelocity(), this.getTheta());
-        }
-        //user.address = (Address) this.address.clone();
-        return user;
-    }
-
-    public static Object deepClone(Object object) {
+    static Object deepClone(Object object) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);
