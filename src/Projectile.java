@@ -1,6 +1,5 @@
 import processing.core.PApplet;
 import processing.core.PVector;
-
 import java.io.Serializable;
 
 class Projectile implements Serializable {
@@ -8,7 +7,8 @@ class Projectile implements Serializable {
     private PVector position;
     private PVector velocity;
     private float theta;
-    private int health = 100;
+    private int currentHealth = 200;
+    private int maxHealth = 200;
 
     Projectile(PVector position, PVector velocity, float theta) {
         this.position = position;
@@ -19,13 +19,13 @@ class Projectile implements Serializable {
 
     void tick(PApplet p) {
         position.add(velocity);
-        d.drawProjectile(p, position, theta);
+        d.drawProjectile(p, position, theta, currentHealth, maxHealth);
         System.out.println(position);
-        health--;
+        currentHealth--;
     }
 
     boolean projectileAlive() {
-        if (health > 0) {
+        if (currentHealth > 0) {
             return true;
         } else {
             return false;

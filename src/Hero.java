@@ -13,6 +13,8 @@ class Hero implements Serializable {
     private float r;
     private float maxForce;
     private float maxSpeed;
+    private int currentCoolDown = 50;
+    private int maxCoolDown = 50;
 
     Hero() {
         acceleration = new PVector(0, 0);
@@ -35,14 +37,23 @@ class Hero implements Serializable {
 
     void tick(PApplet p) {
         movement();
-        d.drawHero(p, position, theta, r);
-        for (Projectile bullet : projectiles) {
-            bullet.tick(p);
-        }
-        for (Projectile i: projectiles) {
-            d.drawProjectile(p, i.getPosition(), i.getTheta());
+
+        if (currentCoolDown < 0) {
+            shoot();
+            currentCoolDown = maxCoolDown;
+        } else {
+            currentCoolDown--;
         }
 
+
+        for (int i = 0; i < projectiles.size(); i++) {
+            if (!projectiles.get(i).projectileAlive()) {
+                projectiles.remove(i);
+            } else {
+                projectiles.get(i).tick(p);
+            }
+        }
+        d.drawHero(p, position, theta, r);
     }
 
     private void movement() {
@@ -54,11 +65,13 @@ class Hero implements Serializable {
     }
 
     void shoot() {
-        Hero hCopy = (Hero)deepClone(this);
-        PVector bPos = hCopy.getPosition();
-        PVector bVel = hCopy.getVelocity();
-        float bTheta = hCopy.getTheta();
-        projectiles.add(new Projectile(bPos, bVel, bTheta));
+        if (projectiles.size() < 3) {
+            Hero hCopy = (Hero)deepClone(this);
+            PVector bPos = hCopy.getPosition();
+            PVector bVel = hCopy.getVelocity();
+            float bTheta = hCopy.getTheta();
+            projectiles.add(new Projectile(bPos, bVel, bTheta));
+        }
     }
 
     private void applyForce(PVector force) {

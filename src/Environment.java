@@ -24,18 +24,6 @@ public class Environment {
             i.seek(mouseLoc);
             i.tick(p);
         }
-//        for (Projectile i : projectiles) {
-//
-//        }
-//        for (int i = 0; i < projectiles.size(); i++) {
-//            projectiles.get(i).tick(p);
-//            if (!projectiles.get(i).projectileAlive()) {
-//                projectiles.remove(i);
-//            } else {
-//                this.drawProjectile(p, projectiles.get(i).getPosition(), projectiles.get(i).getTheta());
-//            }
-//
-//        }
     }
 
     void shoot() {
