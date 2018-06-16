@@ -9,6 +9,7 @@ class Hero implements Serializable {
     private PVector velocity;
     private PVector acceleration;
     private Display d = new Display();
+    private PApplet p;
     private float theta;
     private float r;
     private float maxForce;
@@ -20,6 +21,16 @@ class Hero implements Serializable {
         acceleration = new PVector(0, 0);
         velocity = new PVector(0, -2);
         position = new PVector(100, 100);
+        r = 6;
+        maxSpeed = 4;
+        maxForce = 0.1f;
+    }
+
+    Hero(PApplet p) {
+        this.p = p;
+        acceleration = new PVector(0, 0);
+        velocity = new PVector(0, -2);
+        position = new PVector(p.random(p.width), p.random(p.height));
         r = 6;
         maxSpeed = 4;
         maxForce = 0.1f;
@@ -45,7 +56,6 @@ class Hero implements Serializable {
             currentCoolDown--;
         }
 
-
         for (int i = 0; i < projectiles.size(); i++) {
             if (!projectiles.get(i).projectileAlive()) {
                 projectiles.remove(i);
@@ -66,10 +76,9 @@ class Hero implements Serializable {
 
     void shoot() {
         if (projectiles.size() < 3) {
-            Hero hCopy = (Hero)deepClone(this);
-            PVector bPos = hCopy.getPosition();
-            PVector bVel = hCopy.getVelocity();
-            float bTheta = hCopy.getTheta();
+            PVector bPos = (PVector) deepClone(position);
+            PVector bVel = (PVector) deepClone(velocity);
+            Float bTheta = (Float) deepClone(theta);
             projectiles.add(new Projectile(bPos, bVel, bTheta));
         }
     }
@@ -86,18 +95,6 @@ class Hero implements Serializable {
         applyForce(steer);
     }
 
-    PVector getVelocity() {
-        return velocity;
-    }
-
-    PVector getPosition() {
-        return position;
-    }
-
-    float getTheta() {
-        return theta;
-    }
-
     static Object deepClone(Object object) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -106,8 +103,7 @@ class Hero implements Serializable {
             ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
             ObjectInputStream ois = new ObjectInputStream(bais);
             return ois.readObject();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }

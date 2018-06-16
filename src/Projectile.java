@@ -1,8 +1,7 @@
 import processing.core.PApplet;
 import processing.core.PVector;
-import java.io.Serializable;
 
-class Projectile implements Serializable {
+class Projectile {
     private Display d = new Display();
     private PVector position;
     private PVector velocity;
@@ -14,13 +13,11 @@ class Projectile implements Serializable {
         this.position = position;
         this.velocity = velocity;
         this.theta = theta;
-
     }
 
     void tick(PApplet p) {
         position.add(velocity);
         d.drawProjectile(p, position, theta, currentHealth, maxHealth);
-        System.out.println(position);
         currentHealth--;
     }
 
@@ -32,11 +29,4 @@ class Projectile implements Serializable {
         }
     }
 
-    PVector getPosition() {
-        return position;
-    }
-
-    float getTheta() {
-        return theta;
-    }
 }

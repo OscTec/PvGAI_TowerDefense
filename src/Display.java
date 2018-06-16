@@ -1,9 +1,7 @@
 import processing.core.PApplet;
 import processing.core.PVector;
 
-import java.io.Serializable;
-
-public class Display implements Serializable {
+class Display {
 
     void drawHero(PApplet p, PVector position, float theta, float r) {
         p.pushMatrix();
@@ -21,20 +19,12 @@ public class Display implements Serializable {
     }
 
     void drawProjectile(PApplet p, PVector position, float theta, int currentHealth, int maxHealth) {
-        //p.noFill();
-        p.fill(50,205,50);
-        //p.strokeWeight(5);
+        p.fill(50, 205, 50);
         float m = p.map(currentHealth, 0, maxHealth, 0, 2);
-        p.arc(position.x, position.y, 30, 30, 0, m*(p.PI), p.PIE);
+        p.arc(position.x, position.y, 30, 30, 0, m * (p.PI), p.PIE);
         p.pushMatrix();
-        p.fill(220,20,60);
+        p.fill(220, 20, 60);
         p.ellipse(position.x, position.y, 15, 15);
-//        p.rectMode(p.RADIUS);
-//        p.translate(position.x, position.y);
-//        p.rotate(theta);
-//        p.rect(0, 0, 0, 10);
         p.popMatrix();
-
-
     }
 }
