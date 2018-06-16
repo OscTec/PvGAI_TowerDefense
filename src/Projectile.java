@@ -16,6 +16,7 @@ class Projectile {
     }
 
     void tick(PApplet p) {
+        velocity.setMag(5);
         position.add(velocity);
         d.drawProjectile(p, position, theta, currentHealth, maxHealth);
         currentHealth--;
