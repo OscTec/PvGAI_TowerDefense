@@ -109,5 +109,9 @@ class Hero implements Serializable {
         }
     }
 
+    PVector getPosition() {
+        return position;
+    }
+
 }
 
