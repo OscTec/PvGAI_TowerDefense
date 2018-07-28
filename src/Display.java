@@ -20,16 +20,17 @@ class Display {
 
     void drawEnemy(PApplet p, PVector position, float theta, float r) {
         p.pushMatrix();
-        p.fill(127);
+        p.fill(100, 0, 0);
         p.stroke(0);
         p.strokeWeight(1);
         p.translate(position.x, position.y);
         p.rotate(theta);
-        p.beginShape();
-        p.vertex(0, -r * 2);
-        p.vertex(-r, r * 2);
-        p.vertex(r, r * 2);
-        p.endShape(p.CLOSE);
+        p.ellipse(0, 0, 20, 20);
+//        p.beginShape();
+//        p.vertex(0, -r * 2);
+//        p.vertex(-r, r * 2);
+//        p.vertex(r, r * 2);
+//        p.endShape(p.CLOSE);
         p.popMatrix();
     }
 

@@ -17,6 +17,7 @@ class Hero implements Serializable {
     private int currentCoolDown = 50;
     private int maxCoolDown = 50;
 
+
     Hero() {
         acceleration = new PVector(0, 0);
         velocity = new PVector(0, -2);
@@ -46,8 +47,9 @@ class Hero implements Serializable {
         maxForce = 0.1f;
     }
 
-    void tick(PApplet p) {
+    void tick(PApplet p, PVector target) {
         movement();
+        seek(giveTarget(target));
 
         if (currentCoolDown < 0) {
             shoot();
@@ -56,13 +58,13 @@ class Hero implements Serializable {
             currentCoolDown--;
         }
 
-        for (int i = 0; i < projectiles.size(); i++) {
-            if (!projectiles.get(i).projectileAlive()) {
-                projectiles.remove(i);
-            } else {
-                projectiles.get(i).tick(p);
-            }
-        }
+//        for (int i = 0; i < projectiles.size(); i++) {
+//            if (!projectiles.get(i).projectileAlive()) {
+//                projectiles.remove(i);
+//            } else {
+//                projectiles.get(i).tick(p);
+//            }
+//        }
         d.drawHero(p, position, theta, r);
     }
 
@@ -76,10 +78,12 @@ class Hero implements Serializable {
 
     void shoot() {
         if (projectiles.size() < 3) {
-            PVector bPos = (PVector) deepClone(position);
-            PVector bVel = (PVector) deepClone(velocity);
-            Float bTheta = (Float) deepClone(theta);
-            projectiles.add(new Projectile(bPos, bVel, bTheta));
+            Environment.addProjectile(position, velocity, theta);
+
+//            PVector bPos = (PVector) deepClone(position);
+//            PVector bVel = (PVector) deepClone(velocity);
+//            Float bTheta = (Float) deepClone(theta);
+//            projectiles.add(new Projectile(bPos, bVel, bTheta));
         }
     }
 
@@ -95,19 +99,44 @@ class Hero implements Serializable {
         applyForce(steer);
     }
 
-    static Object deepClone(Object object) {
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(object);
-            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-            ObjectInputStream ois = new ObjectInputStream(bais);
-            return ois.readObject();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+    PVector giveTarget(PVector mouse) {
+        PVector seekThis = new PVector(p.width / 2, p.height / 2);
+        double lowestDistance = Settings.maxDistance;
+        if(Settings.chaseMouse == true) {
+            seekThis = mouse;
+        } else {
+            if (Environment.minions.isEmpty()) {
+                //return seekThis;
+            } else {
+                for (int i = 0; i < Environment.minions.size(); i++) {
+                    float d = position.dist(Environment.minions.get(i).position);
+                    if (d < lowestDistance) {
+                        seekThis = Environment.minions.get(i).position;
+                        System.out.println(i);
+                        //System.out.println(seekThis);
+                    }
+                }
+
+            }
+
         }
+        //System.out.println(seekThis);
+        return seekThis;
     }
+
+//    static Object deepClone(Object object) {
+//        try {
+//            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//            ObjectOutputStream oos = new ObjectOutputStream(baos);
+//            oos.writeObject(object);
+//            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+//            ObjectInputStream ois = new ObjectInputStream(bais);
+//            return ois.readObject();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
 
     PVector getPosition() {
         return position;

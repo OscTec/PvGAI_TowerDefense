@@ -3,7 +3,7 @@ import processing.core.PVector;
 
 class Projectile {
     private Display d = new Display();
-    private PVector position;
+    PVector position;
     private PVector velocity;
     private float theta;
     private int currentHealth = 200;
