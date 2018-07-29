@@ -18,6 +18,7 @@ class Hero implements Serializable {
     private int maxCoolDown = 50;
 
 
+
     Hero() {
         acceleration = new PVector(0, 0);
         velocity = new PVector(0, -2);
@@ -111,6 +112,7 @@ class Hero implements Serializable {
                 for (int i = 0; i < Environment.minions.size(); i++) {
                     float d = position.dist(Environment.minions.get(i).position);
                     if (d < lowestDistance) {
+                        lowestDistance = d;
                         seekThis = Environment.minions.get(i).position;
                         System.out.println(i);
                         //System.out.println(seekThis);

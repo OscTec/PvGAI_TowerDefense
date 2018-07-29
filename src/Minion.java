@@ -1,7 +1,7 @@
 import processing.core.PApplet;
 import processing.core.PVector;
 
-public class Minion extends Enemy{
+public class Minion {
     private Display d = new Display();
     int health = 100;
     int speed = 5;
