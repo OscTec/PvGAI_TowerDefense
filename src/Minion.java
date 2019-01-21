@@ -1,10 +1,15 @@
 import processing.core.PApplet;
 import processing.core.PVector;
 
+import java.util.ArrayList;
+
 public class Minion {
     private Display d = new Display();
-    int health = 100;
-    int speed = 5;
+    int currentHealth = 100;
+    int maxHealth = 100;
+    int speed = 1;
+    private ArrayList<PVector> points;
+    private int waypointIndex = 0;
     PVector position;
     private PVector velocity;
     private PVector acceleration;
@@ -24,9 +29,27 @@ public class Minion {
         maxForce = 0.1f;
     }
 
+    Minion(PApplet p, PVector pos) {
+        this.p = p;
+        acceleration = new PVector(0, 0);
+        velocity = new PVector(0, -2);
+        position = pos;
+        r = 6;
+        maxSpeed = 4;
+        maxForce = 0.1f;
+    }
+
+    Minion(PApplet p, PVector pos, ArrayList lanePoints) {
+        this.p = p;
+        position = pos;
+        points = lanePoints;
+
+    }
+
     void tick(PApplet p) {
         //movement();
-        d.drawEnemy(p, position, theta, r);
+        d.drawEnemy(p, position, theta, r, currentHealth, maxHealth);
+        followLane();
     }
 
     private void movement() {
@@ -35,6 +58,13 @@ public class Minion {
         velocity.limit(maxSpeed);
         position.add(velocity);
         acceleration.mult(0);
+    }
+
+    private void followLane() {
+        if (PVector.dist(position, points.get(waypointIndex)) < 0.4f) {
+            waypointIndex++;
+        }
+
     }
 
     void seek(PVector target) {

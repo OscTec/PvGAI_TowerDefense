@@ -18,7 +18,22 @@ class Display {
         p.popMatrix();
     }
 
-    void drawEnemy(PApplet p, PVector position, float theta, float r) {
+    void drawHero(PApplet p, PVector pos, float theta, float r, int currentHealth, int maxHealth) {
+        float healthColour = p.map(currentHealth, 0, maxHealth, 0, 1);
+        p.fill(p.lerpColor(p.color(255, 0, 0), p.color(0, 255, 0), healthColour));
+        float m = p.map(currentHealth, 0, maxHealth, 0, 2);
+        p.arc(pos.x, pos.y, 30, 30, 0, m * (p.PI), p.PIE);
+        p.pushMatrix();
+        p.fill(220, 20, 60);
+        p.ellipse(pos.x, pos.y, 15, 15);
+        p.popMatrix();
+    }
+
+    void drawEnemy(PApplet p, PVector position, float theta, float r, int currentHealth, int maxHealth) {
+        float healthColour = p.map(currentHealth, 0, maxHealth, 0, 1);
+        p.fill(p.lerpColor(p.color(255, 0, 0), p.color(0, 255, 0), healthColour));
+        float m = p.map(currentHealth, 0, maxHealth, 0, 2);
+        p.arc(position.x, position.y, 30, 30, 0, m * (p.PI), p.PIE);
         p.pushMatrix();
         p.fill(100, 0, 0);
         p.stroke(0);
@@ -34,6 +49,15 @@ class Display {
         p.popMatrix();
     }
 
+    void drawWaypoint(PApplet p, PVector pos) {
+        p.ellipse(pos.x,pos.y,5,5);
+
+    }
+
+    void drawTower(PApplet p, PVector pos) {
+        p.rect(pos.x, pos.y, 10, 10);
+    }
+
     void drawProjectile(PApplet p, PVector position, float theta, int currentHealth, int maxHealth) {
         float healthColour = p.map(currentHealth, 0, maxHealth, 0, 1);
         p.fill(p.lerpColor(p.color(255, 0, 0), p.color(0, 255, 0), healthColour));
@@ -43,6 +67,10 @@ class Display {
         p.fill(220, 20, 60);
         p.ellipse(position.x, position.y, 15, 15);
         p.popMatrix();
+    }
+
+    void drawProjectile(PApplet p, PVector pos){
+        p.ellipse(pos.x, pos.y, 15, 15);
     }
 
     void drawFrameRate(PApplet p) {

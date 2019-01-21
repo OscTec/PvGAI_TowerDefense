@@ -4,8 +4,10 @@ import java.io.*;
 import java.util.ArrayList;
 
 class Hero implements Serializable {
+    private ArrayList<PVector> wayPoints;
+    private int waypointIndex = 0;
     private ArrayList<Projectile> projectiles = new ArrayList<>();
-    private PVector position;
+    protected PVector position;
     private PVector velocity;
     private PVector acceleration;
     private Display d = new Display();
@@ -16,25 +18,41 @@ class Hero implements Serializable {
     private float maxSpeed;
     private int currentCoolDown = 50;
     private int maxCoolDown = 50;
+    private int currentHealth;
+    private int maxHealth = 100;
+    //private int health = 100;
 
 
 
     Hero() {
         acceleration = new PVector(0, 0);
-        velocity = new PVector(0, -2);
+        velocity = new PVector(0, 0);
         position = new PVector(100, 100);
         r = 6;
         maxSpeed = 4;
         maxForce = 0.1f;
     }
 
-    Hero(PApplet p) {
+    Hero(PApplet p, PVector pos, ArrayList points) {
+        this.p = p;
+        wayPoints = points;
+        acceleration = new PVector(0, 0);
+        velocity = new PVector(0, 0);
+        //position = new PVector(p.random(p.width), p.random(p.height));
+        position = pos;
+        r = 6;
+        maxSpeed = 2;
+        maxForce = 1f;
+        currentHealth = maxHealth;
+    }
+
+    Hero(PApplet p, PVector pos) {
         this.p = p;
         acceleration = new PVector(0, 0);
         velocity = new PVector(0, -2);
-        position = new PVector(p.random(p.width), p.random(p.height));
+        position = pos;
         r = 6;
-        maxSpeed = 4;
+        maxSpeed = 1;
         maxForce = 0.1f;
     }
 
@@ -48,16 +66,43 @@ class Hero implements Serializable {
         maxForce = 0.1f;
     }
 
+    void collisionCheck() {
+        boolean hit = false;
+        for (Projectile i : Environment.getProjectiles()) {
+            //System.out.println(this.position);
+            if ((i.position.x <= this.position.x + 10 && i.position.x >= this.position.x - 10) && (i.position.y <= this.position.y + 10 && i.position.y >= this.position.y - 10)) {
+                //hit = true;
+
+                currentHealth = currentHealth - i.getDamage();
+                System.out.println("Health: " + currentHealth);
+                Environment.getProjectiles().remove(i);
+                return;
+            } else {
+                //hit = false;
+            }
+        }
+        //return hit;
+    }
+
+    boolean checkDead() {
+        if (currentHealth <= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     void tick(PApplet p, PVector target) {
+        collisionCheck();
         movement();
         seek(giveTarget(target));
 
-        if (currentCoolDown < 0) {
-            shoot();
-            currentCoolDown = maxCoolDown;
-        } else {
-            currentCoolDown--;
-        }
+//        if (currentCoolDown < 0) {
+//            shoot();
+//            currentCoolDown = maxCoolDown;
+//        } else {
+//            currentCoolDown--;
+//        }
 
 //        for (int i = 0; i < projectiles.size(); i++) {
 //            if (!projectiles.get(i).projectileAlive()) {
@@ -66,20 +111,23 @@ class Hero implements Serializable {
 //                projectiles.get(i).tick(p);
 //            }
 //        }
-        d.drawHero(p, position, theta, r);
+        //d.drawHero(p, position, theta, r);
+        d.drawHero(p, position, theta, r, currentHealth, maxHealth);
     }
 
     private void movement() {
         theta = velocity.heading() + (float) (3.14 / 2);
         velocity.add(acceleration);
         velocity.limit(maxSpeed);
+        //System.out.println(velocity);
         position.add(velocity);
         acceleration.mult(0);
     }
 
     void shoot() {
         if (projectiles.size() < 3) {
-            Environment.addProjectile(position, velocity, theta);
+            Environment.addProjectile(position, velocity);
+            //Environment.addProjectile(position, velocity, theta);
 
 //            PVector bPos = (PVector) deepClone(position);
 //            PVector bVel = (PVector) deepClone(velocity);
@@ -108,37 +156,48 @@ class Hero implements Serializable {
         } else {
             if (Environment.minions.isEmpty()) {
                 //return seekThis;
-            } else {
+                System.out.println("No minions");
+            }
+
+            if (Settings.chasePoints) {
+                seekThis = followLane();
+
+//                for (PVector p : wayPoints) {
+//                    float d = position.dist(p);
+//                    if (d < lowestDistance) {
+//                        lowestDistance = d;
+//                        seekThis = p;
+//
+//                    }
+//                }
+            }
+            else {
                 for (int i = 0; i < Environment.minions.size(); i++) {
                     float d = position.dist(Environment.minions.get(i).position);
                     if (d < lowestDistance) {
                         lowestDistance = d;
                         seekThis = Environment.minions.get(i).position;
                         System.out.println(i);
-                        //System.out.println(seekThis);
                     }
                 }
 
             }
 
         }
-        //System.out.println(seekThis);
         return seekThis;
     }
 
-//    static Object deepClone(Object object) {
-//        try {
-//            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//            ObjectOutputStream oos = new ObjectOutputStream(baos);
-//            oos.writeObject(object);
-//            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-//            ObjectInputStream ois = new ObjectInputStream(bais);
-//            return ois.readObject();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
+    private PVector followLane() {
+        if (PVector.dist(position, wayPoints.get(waypointIndex)) < 5f) {
+            if (waypointIndex < wayPoints.size() - 1) {
+                waypointIndex++;
+            }
+
+        }
+        return wayPoints.get(waypointIndex);
+
+
+    }
 
     PVector getPosition() {
         return position;
