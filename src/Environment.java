@@ -1,4 +1,3 @@
-import com.sun.jdi.ArrayReference;
 import processing.core.PApplet;
 import processing.core.PVector;
 import java.io.ByteArrayInputStream;
@@ -10,11 +9,14 @@ import java.util.ArrayList;
 class Environment {
     private PApplet p;
     private Display d = new Display();
-    private PVector mouse;
+    //private PVector mouse;
     private Stopwatch sw = new Stopwatch();
-    private int minionSpawnRate = 5;
-    protected static ArrayList<Hero> heroes = new ArrayList<>();
-    static ArrayList<Minion> minions = new ArrayList<>();
+    private int minionSpawnRate = Stats.getMinionSpawnRate();
+    //protected static ArrayList<Hero> heroes = new ArrayList<>();
+    //static ArrayList<Minion> minions = new ArrayList<>();
+
+    private static ArrayList<Minion> playerMinions = new ArrayList<>();
+    private static ArrayList<Minion> aiMinions = new ArrayList<>();
     private static ArrayList<Tower> playerTowers = new ArrayList<>();
     private static ArrayList<Tower> aiTowers = new ArrayList<>();
     //static ArrayList<Point> topLanePoints = new ArrayList<>();
@@ -39,18 +41,26 @@ class Environment {
     }
 
     void tick() {
-        mouse();
-        for (Hero h : heroes) {
-            if (h.checkDead()) {
-                heroes.remove(h);
+//        mouse();
+//        for (Hero h : heroes) {
+//            if (h.checkDead()) {
+//                heroes.remove(h);
+//                return;
+//            }
+//            h.tick(p, mouse);
+//        }
+
+        for (Minion m : playerMinions) {
+            if (m.checkDead()) {
+                playerMinions.remove(m);
                 return;
             }
-            h.tick(p, mouse);
+            m.tick(p);
         }
 
-        for (Minion m : minions) {
+        for (Minion m : aiMinions) {
             if (m.checkDead()) {
-                heroes.remove(m);
+                aiMinions.remove(m);
                 return;
             }
             m.tick(p);
@@ -80,21 +90,9 @@ class Environment {
             d.drawWaypoint(p, pos);
         }
         if(sw.elapsedTime() >= minionSpawnRate) {
-            //buildHeroes();
             buildMinions();
             sw.reset();
         }
-
-//        for (int i = 0; i < minions.size(); i++) {
-//            //System.out.println("minion: " + i);
-//            minions.get(i).seek(heroes.get(0).getPosition());
-//            minions.get(i).tick(p);
-//            //minions.get(i).collisionCheck();
-//            if(minions.get(i).collisionCheck()) {
-//                minions.remove(i);
-//            }
-//        }
-
         for (Projectile pro : playerProjectiles) {
             if (!pro.projectileAlive()) {
                 playerProjectiles.remove(pro);
@@ -102,9 +100,7 @@ class Environment {
             } else {
                 pro.tick(p);
             }
-
         }
-
         for (Projectile pro : aiProjectiles) {
             if (!pro.projectileAlive()) {
                 aiProjectiles.remove(pro);
@@ -114,32 +110,24 @@ class Environment {
             }
 
         }
-
-//        for (int i = 0; i < projectiles.size(); i++) {
-//            if (!projectiles.get(i).projectileAlive()) {
-//                projectiles.remove(i);
-//            } else {
-//                projectiles.get(i).tick(p);
-//            }
-//        }
         d.drawFrameRate(p);
     }
 
-    private void buildHeroes() {
-        heroes.add(new Hero(p, new PVector(100, p.height/2), topLanePoints));
-        heroes.add(new Hero(p, new PVector(100, p.height/2), midLanePoints));
-        heroes.add(new Hero(p, new PVector(100, p.height/2), btmLanePoints));
-    }
+//    private void buildHeroes() {
+//        heroes.add(new Hero(p, new PVector(100, p.height/2), topLanePoints));
+//        heroes.add(new Hero(p, new PVector(100, p.height/2), midLanePoints));
+//        heroes.add(new Hero(p, new PVector(100, p.height/2), btmLanePoints));
+//    }
 
     private void buildMinions() {
         //Spawn player minions
-        minions.add(new Minion(p, new PVector(100, p.height/2), topLanePoints, true));
-        minions.add(new Minion(p, new PVector(100, p.height/2), midLanePoints, true));
-        minions.add(new Minion(p, new PVector(100, p.height/2), btmLanePoints, true));
+        playerMinions.add(new Minion(p, new PVector(100, p.height/2f), topLanePoints, true));
+        playerMinions.add(new Minion(p, new PVector(100, p.height/2f), midLanePoints, true));
+        playerMinions.add(new Minion(p, new PVector(100, p.height/2f), btmLanePoints, true));
         //Spawn AI minions
-        minions.add(new Minion(p, new PVector(p.width - 130, p.height/2), topLanePoints, false));
-        minions.add(new Minion(p, new PVector(p.width - 100, p.height/2), midLanePoints, false));
-        minions.add(new Minion(p, new PVector(p.width - 130, p.height/2), btmLanePoints, false));
+        aiMinions.add(new Minion(p, new PVector(p.width - 130, p.height/2f), topLanePoints, false));
+        aiMinions.add(new Minion(p, new PVector(p.width - 100, p.height/2f), midLanePoints, false));
+        aiMinions.add(new Minion(p, new PVector(p.width - 130, p.height/2f), btmLanePoints, false));
     }
 
     private void buildTowers() {
@@ -186,17 +174,9 @@ class Environment {
         btmLanePoints.add(new PVector(p.width*0.9f, p.height*0.5f + p.height*0.1f));
     }
 
-
-    private void mouse() {
-        mouse = new PVector(p.mouseX, p.mouseY);
-        d.drawMouse(p, mouse);
-    }
-
-//    static void addProjectile(PVector position, PVector velocity, float theta) {
-//        PVector bPos = (PVector) deepClone(position);
-//        PVector bVel = (PVector) deepClone(velocity);
-//        Float bTheta = (Float) deepClone(theta);
-//        projectiles.add(new Projectile(bPos, bVel, bTheta));
+//    private void mouse() {
+//        mouse = new PVector(p.mouseX, p.mouseY);
+//        d.drawMouse(p, mouse);
 //    }
 
     static void addAiProjectile(PVector position, PVector velocity) {
@@ -211,32 +191,19 @@ class Environment {
         playerProjectiles.add(new Projectile(bPos, bVel));
     }
 
-//    static void addProjectile(PVector position, PVector velocity) {
-//        PVector bPos = (PVector) deepClone(position);
-//        PVector bVel = (PVector) deepClone(velocity);
-//        projectiles.add(new Projectile(bPos, bVel));
-//    }
+    static ArrayList<Minion> getPlayerMinions() {return playerMinions;}
 
-    static  ArrayList<Projectile> getPlayerProjectiles() {
-        return playerProjectiles;
-    }
+    static ArrayList<Minion> getAiMinions() {return aiMinions;}
 
-    static ArrayList<Projectile> getAiProjectiles() {
-        return  aiProjectiles;
-    }
+    static  ArrayList<Projectile> getPlayerProjectiles() {return playerProjectiles;}
 
-//    static ArrayList<Projectile> getProjectiles() {
-//        return projectiles;
-//    }
+    static ArrayList<Projectile> getAiProjectiles() {return  aiProjectiles;}
+
     static ArrayList<Tower> getPlayerTowers() {return playerTowers;}
 
     static ArrayList<Tower> getAiTowers() {return aiTowers;}
 
-    static ArrayList<Minion> getMinions() {
-        return minions;
-    }
-
-    static Object deepClone(Object object) {
+    private static Object deepClone(Object object) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -249,7 +216,4 @@ class Environment {
             return null;
         }
     }
-
-
-
 }

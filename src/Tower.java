@@ -1,8 +1,6 @@
 import processing.core.PApplet;
 import processing.core.PVector;
 
-import java.util.ArrayList;
-
 public class Tower {
     private Display d = new Display();
     private PApplet p;
@@ -14,7 +12,6 @@ public class Tower {
     private float fireRate;
     private boolean player;
     private Stopwatch sw = new Stopwatch();
-
 
 
     Tower(PApplet p, PVector pos, int health, int damage, int range, float fireRate) {
@@ -43,21 +40,38 @@ public class Tower {
         d.drawTower(p, pos, currentHealth, maxHealth);
         PVector target = setTarget();
         float distance = PVector.dist(target, pos);
-        if(distance <= range && sw.elapsedTime() >= 1/fireRate) {
+        if(player) {
+            if (distance <= range && sw.elapsedTime() >= 1 / fireRate) {
+                Environment.addPlayerProjectile(pos, seek(target));
+                sw.reset();
+            }
+        } else {
+            if (distance <= range && sw.elapsedTime() >= 1 / fireRate) {
                 Environment.addAiProjectile(pos, seek(target));
                 sw.reset();
+            }
         }
     }
 
-    PVector setTarget() {
+    private PVector setTarget() {
         PVector seekThis = new PVector(p.width / 2, p.height / 2);
         double lowestDistance = Settings.maxDistance;
-        for (Hero h : Environment.heroes) {
-            float d = pos.dist(h.position);
-            if (d < lowestDistance) {
-                lowestDistance = d;
-                seekThis = h.position;
+        if (player) {
+            for (Minion m : Environment.getAiMinions()) {
+                float d = pos.dist(m.getPos());
+                if (d < lowestDistance) {
+                    lowestDistance = d;
+                    seekThis = m.getPos();
+                }
+            }
+        } else {
+            for (Minion m : Environment.getPlayerMinions()) {
+                float d = pos.dist(m.getPos());
+                if (d < lowestDistance) {
+                    lowestDistance = d;
+                    seekThis = m.getPos();
 
+                }
             }
         }
         return seekThis;
@@ -78,13 +92,14 @@ public class Tower {
 //
 //    }
 
-    PVector seek(PVector target) {
-        PVector desired = PVector.sub(target, pos);
+    private PVector seek(PVector target) {
+        //PVector desired = PVector.sub(target, pos);
         //desired.setMag(maxSpeed);
         //PVector steer = PVector.sub(desired, velocity);
         //steer.limit(maxForce);
         //applyForce(steer);
-        return desired;
+        //return desired;
+        return PVector.sub(target, pos);
     }
 
     boolean checkDead() {
@@ -96,7 +111,7 @@ public class Tower {
     }
 
     private void checkDamage() {
-        if(player) {
+        if (player) {
             Projectile hit = Methods.collisionCheck(pos, Environment.getAiProjectiles());
             if (hit != null) {
                 currentHealth = currentHealth - hit.getDamage();
@@ -112,9 +127,7 @@ public class Tower {
 
     }
 
-    PVector getPos() {
-        return pos;
-    }
+    PVector getPos() {return pos;}
 
 }
 

@@ -22,7 +22,7 @@ class Minion {
     private boolean player;
     private Stopwatch sw = new Stopwatch();
 
-    Minion(PApplet p, PVector pos, ArrayList points, Boolean player) {
+    Minion(PApplet p, PVector pos, ArrayList points, boolean player) {
         this.p = p;
         this.wayPoints = points;
         this.player = player;
@@ -58,12 +58,14 @@ class Minion {
         if (player) {
             Projectile hit = Methods.collisionCheck(pos, Environment.getAiProjectiles());
             if (hit != null) {
+                //System.out.println("Player minion hit");
                 currentHealth = currentHealth - hit.getDamage();
                 Environment.getAiProjectiles().remove(hit);
             }
         } else {
             Projectile hit = Methods.collisionCheck(pos, Environment.getPlayerProjectiles());
             if (hit != null) {
+                //System.out.println("AI minion hit");
                 currentHealth = currentHealth - hit.getDamage();
                 Environment.getPlayerProjectiles().remove(hit);
             }
@@ -145,6 +147,10 @@ class Minion {
             }
         }
         return wayPoints.get(waypointIndex);
+    }
+
+    PVector getPos() {
+        return pos;
     }
 
 }
