@@ -16,9 +16,9 @@ class Minion {
     private float maxForce;
     private float maxSpeed;
     private int currentHealth;
-    private int maxHealth = 100;
-    private float fireRate = 2;
-    private int range = 50;
+    private int maxHealth;
+    private float fireRate;
+    private int range;
     private boolean player;
     private Stopwatch sw = new Stopwatch();
 
@@ -30,12 +30,25 @@ class Minion {
         velocity = new PVector(0, 0);
         this.pos = pos;
         r = 6;
-        maxSpeed = 2;
+        //maxSpeed = 2;
         maxForce = 1f;
-        currentHealth = maxHealth;
+
+        if(player) {
+            this.maxHealth = Stats.getPlayerMinionHealth();
+            this.maxSpeed = Stats.getPlayerMinionSpeed();
+            this.range = Stats.getPlayerMinionRange();
+            //this.damage = Stats.getPlayerMinionDamage();
+            this.fireRate = Stats.getPlayerMinionAtkSpeed();
+        }
         if(!player) {
+            this.maxHealth = Stats.getAiMinionHealth();
+            this.maxSpeed = Stats.getAiMinionSpeed();
+            this.range = Stats.getAiMinionRange();
+            //this.damage = Stats.getAiMinionDamage();
+            this.fireRate = Stats.getAiMinionAtkSpeed();
             waypointIndex = points.size()-1;
         }
+        currentHealth = maxHealth;
     }
 
     void tick(PApplet p) {
