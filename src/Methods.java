@@ -4,6 +4,20 @@ import java.util.ArrayList;
 
 public class Methods {
 
+    protected static PVector findMinion(PVector pos, ArrayList<Minion> targets) {
+        PVector seekThis = new PVector();
+        double lowestDistance = Settings.maxDistance;
+        for (Minion m : targets) {
+            float d = pos.dist(m.getPos());
+            if (d < lowestDistance) {
+                lowestDistance = d;
+                seekThis = m.getPos();
+
+            }
+        }
+        return seekThis;
+    }
+
     protected static PVector findTarget(PVector pos, ArrayList<Tower> targets) {
         PVector seekThis = new PVector();
         double lowestDistance = Settings.maxDistance;
