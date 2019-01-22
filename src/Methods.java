@@ -8,10 +8,10 @@ public class Methods {
         PVector seekThis = new PVector();
         double lowestDistance = Settings.maxDistance;
         for (Tower t : targets) {
-            float d = pos.dist(t.pos);
+            float d = pos.dist(t.getPos());
             if (d < lowestDistance) {
                 lowestDistance = d;
-                seekThis = t.pos;
+                seekThis = t.getPos();
 
             }
         }

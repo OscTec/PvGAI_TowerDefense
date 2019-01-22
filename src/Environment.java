@@ -11,9 +11,11 @@ class Environment {
     private PApplet p;
     private Display d = new Display();
     private PVector mouse;
+    private Stopwatch sw = new Stopwatch();
+    private int minionSpawnRate = 5;
     protected static ArrayList<Hero> heroes = new ArrayList<>();
     static ArrayList<Minion> minions = new ArrayList<>();
-    private ArrayList<Tower> playerTowers = new ArrayList<>();
+    private static ArrayList<Tower> playerTowers = new ArrayList<>();
     private static ArrayList<Tower> aiTowers = new ArrayList<>();
     //static ArrayList<Point> topLanePoints = new ArrayList<>();
     //private static ArrayList<Projectile> projectiles = new ArrayList<>();
@@ -30,7 +32,7 @@ class Environment {
         buildTopLane();
         buildMidLane();
         buildBtmLane();
-        buildHeroes();
+        //buildHeroes();
         buildMinions();
         buildTowers();
 
@@ -46,10 +48,26 @@ class Environment {
             h.tick(p, mouse);
         }
 
+        for (Minion m : minions) {
+            if (m.checkDead()) {
+                heroes.remove(m);
+                return;
+            }
+            m.tick(p);
+        }
+
         for (Tower t : playerTowers) {
+            if (t.checkDead()) {
+                playerTowers.remove(t);
+                return;
+            }
             t.tick();
         }
         for (Tower t : aiTowers) {
+            if (t.checkDead()) {
+                aiTowers.remove(t);
+                return;
+            }
             t.tick();
         }
         for (PVector pos: topLanePoints) {
@@ -60,6 +78,11 @@ class Environment {
         }
         for (PVector pos: btmLanePoints) {
             d.drawWaypoint(p, pos);
+        }
+        if(sw.elapsedTime() >= minionSpawnRate) {
+            //buildHeroes();
+            buildMinions();
+            sw.reset();
         }
 
 //        for (int i = 0; i < minions.size(); i++) {
@@ -109,16 +132,29 @@ class Environment {
     }
 
     private void buildMinions() {
-        minions.add(new Minion(p, new PVector(100, 50)));
-        minions.add(new Minion(p, new PVector(200, 50)));
-        minions.add(new Minion(p, new PVector(300, 50)));
-        minions.add(new Minion(p, new PVector(100, 100)));
-        minions.add(new Minion(p, new PVector(100, 200)));
+        //Spawn player minions
+        minions.add(new Minion(p, new PVector(100, p.height/2), topLanePoints, true));
+        minions.add(new Minion(p, new PVector(100, p.height/2), midLanePoints, true));
+        minions.add(new Minion(p, new PVector(100, p.height/2), btmLanePoints, true));
+        //Spawn AI minions
+        minions.add(new Minion(p, new PVector(p.width - 130, p.height/2), topLanePoints, false));
+        minions.add(new Minion(p, new PVector(p.width - 100, p.height/2), midLanePoints, false));
+        minions.add(new Minion(p, new PVector(p.width - 130, p.height/2), btmLanePoints, false));
     }
 
     private void buildTowers() {
         //playerTowers.add(new Tower(p, new PVector(p.width*0.5f, p.height*0.1f), 10,10,50,2f));
-        aiTowers.add(new Tower(p, new PVector(p.width*0.5f, p.height*0.1f), 10,10,50,1f));
+        //aiTowers.add(new Tower(p, new PVector(p.width*0.5f, p.height*0.1f), 10,10,70,1f));
+        //aiTowers.add(new Tower(p, new PVector(p.width*0.5f, p.height*0.5f), 10,10,70,1f));
+        //aiTowers.add(new Tower(p, new PVector(p.width*0.5f, p.height*0.9f), 10,10,70,1f));
+
+        playerTowers.add(new Tower(p, new PVector(p.width*0.3f, p.height*0.1f), true));
+        playerTowers.add(new Tower(p, new PVector(p.width*0.3f, p.height*0.5f), true));
+        playerTowers.add(new Tower(p, new PVector(p.width*0.3f, p.height*0.9f), true));
+
+        aiTowers.add(new Tower(p, new PVector(p.width*0.7f, p.height*0.1f), false));
+        aiTowers.add(new Tower(p, new PVector(p.width*0.7f, p.height*0.5f), false));
+        aiTowers.add(new Tower(p, new PVector(p.width*0.7f, p.height*0.9f), false));
 
     }
 
@@ -192,6 +228,7 @@ class Environment {
 //    static ArrayList<Projectile> getProjectiles() {
 //        return projectiles;
 //    }
+    static ArrayList<Tower> getPlayerTowers() {return playerTowers;}
 
     static ArrayList<Tower> getAiTowers() {return aiTowers;}
 

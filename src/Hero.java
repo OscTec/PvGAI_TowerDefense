@@ -19,7 +19,7 @@ class Hero implements Serializable {
     private float maxSpeed;
     private int currentHealth;
     private int maxHealth = 100;
-    private float fireRate = 10;
+    private float fireRate = 2;
     private int range = 50;
     private Stopwatch sw = new Stopwatch();
 
@@ -56,7 +56,6 @@ class Hero implements Serializable {
     private void checkDamage() {
         Projectile hit = Methods.collisionCheck(position, Environment.getAiProjectiles());
         if (hit != null) {
-            System.out.println("HEalth: " + currentHealth);
             currentHealth = currentHealth - hit.getDamage();
             Environment.getAiProjectiles().remove(hit);
         }
@@ -109,7 +108,7 @@ class Hero implements Serializable {
         float distance = PVector.dist(position, closestTowerPos);
         if (distance <= range) {
             //Environment.addPlayerProjectile(position, Methods.seek(position, closestTowerPos));
-            System.out.println("Tower in range");
+            //System.out.println("Tower in range");
             seekThis = position;
             //sw.reset();
             //Projectile(pos, seek(target));

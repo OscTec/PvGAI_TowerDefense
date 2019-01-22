@@ -6,34 +6,47 @@ import java.util.ArrayList;
 public class Tower {
     private Display d = new Display();
     private PApplet p;
-    protected PVector pos;
-    private int health;
+    private PVector pos;
+    private int currentHealth;
+    private int maxHealth;
     private int damage;
     private int range;
     private float fireRate;
+    private boolean player;
     private Stopwatch sw = new Stopwatch();
+
+
 
     Tower(PApplet p, PVector pos, int health, int damage, int range, float fireRate) {
         this.p = p;
         this.pos = pos;
-        this.health = health;
+        this.maxHealth = health;
         this.damage = damage;
         this.range = range;
         this.fireRate = fireRate;
+        this.currentHealth = maxHealth;
+    }
+
+    Tower(PApplet p, PVector pos, boolean player) {
+        this.p = p;
+        this.pos = pos;
+        this.player = player;
+        this.maxHealth = Stats.getTowerHealth();
+        this.damage = Stats.getTowerDamage();
+        this.range = Stats.getTowerRange();
+        this.fireRate = Stats.getTowerAtkSpeed();
+        this.currentHealth = maxHealth;
     }
 
     void tick() {
-        //System.out.println(sw.elapsedTime());
-        d.drawTower(p, pos);
+        checkDamage();
+        d.drawTower(p, pos, currentHealth, maxHealth);
         PVector target = setTarget();
         float distance = PVector.dist(target, pos);
         if(distance <= range && sw.elapsedTime() >= 1/fireRate) {
                 Environment.addAiProjectile(pos, seek(target));
-                System.out.println("Shot fired");
                 sw.reset();
-            //Projectile(pos, seek(target));
         }
-
     }
 
     PVector setTarget() {
@@ -50,20 +63,20 @@ public class Tower {
         return seekThis;
     }
 
-    PVector setTarget(PVector pos, ArrayList<Hero> target) {
-        PVector seekThis = new PVector(p.width / 2, p.height / 2);
-        double lowestDistance = Settings.maxDistance;
-        for (Hero h : target) {
-            float d = pos.dist(h.position);
-            if (d < lowestDistance) {
-                lowestDistance = d;
-                seekThis = h.position;
-
-            }
-        }
-        return seekThis;
-
-    }
+//    PVector setTarget(PVector pos, ArrayList<Hero> target) {
+//        PVector seekThis = new PVector(p.width / 2, p.height / 2);
+//        double lowestDistance = Settings.maxDistance;
+//        for (Hero h : target) {
+//            float d = pos.dist(h.position);
+//            if (d < lowestDistance) {
+//                lowestDistance = d;
+//                seekThis = h.position;
+//
+//            }
+//        }
+//        return seekThis;
+//
+//    }
 
     PVector seek(PVector target) {
         PVector desired = PVector.sub(target, pos);
@@ -72,6 +85,31 @@ public class Tower {
         //steer.limit(maxForce);
         //applyForce(steer);
         return desired;
+    }
+
+    boolean checkDead() {
+        if (currentHealth <= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void checkDamage() {
+        if(player) {
+            Projectile hit = Methods.collisionCheck(pos, Environment.getAiProjectiles());
+            if (hit != null) {
+                currentHealth = currentHealth - hit.getDamage();
+                Environment.getAiProjectiles().remove(hit);
+            }
+        } else {
+            Projectile hit = Methods.collisionCheck(pos, Environment.getPlayerProjectiles());
+            if (hit != null) {
+                currentHealth = currentHealth - hit.getDamage();
+                Environment.getPlayerProjectiles().remove(hit);
+            }
+        }
+
     }
 
     PVector getPos() {
