@@ -29,6 +29,27 @@ class Display {
         p.popMatrix();
     }
 
+    void drawMinion(PApplet p, PVector pos, int currentHealth, int maxHealth, int range) {
+
+        float healthColour = p.map(currentHealth, 0, maxHealth, 0, 1);
+        p.fill(p.lerpColor(p.color(255, 0, 0), p.color(0, 255, 0), healthColour));
+        float m = p.map(currentHealth, 0, maxHealth, 0, 2);
+        //p.ellipseMode(p.CENTER);
+        p.arc(pos.x, pos.y, 30, 30, 0, m * (p.PI), p.PIE);
+        p.pushMatrix();
+        p.fill(220, 20, 60);
+        p.ellipse(pos.x, pos.y, 15, 15);
+        p.popMatrix();
+        if(Settings.rangeLines) {
+            p.pushMatrix();
+            p.noFill();
+            //p.ellipseMode(p.CENTER);
+            p.stroke(204, 102, 0);
+            p.ellipse(pos.x, pos.y, range*2, range*2);
+            p.popMatrix();
+        }
+    }
+
     void drawEnemy(PApplet p, PVector position, float theta, float r, int currentHealth, int maxHealth) {
         float healthColour = p.map(currentHealth, 0, maxHealth, 0, 1);
         p.fill(p.lerpColor(p.color(255, 0, 0), p.color(0, 255, 0), healthColour));
@@ -69,6 +90,27 @@ class Display {
         p.fill(220, 20, 60);
         p.rect(pos.x, pos.y, 25, 25);
         p.popMatrix();
+    }
+
+    void drawTower(PApplet p, PVector pos, int currentHealth, int maxHealth, int range) {
+        p.rectMode(p.RADIUS);
+        float healthColour = p.map(currentHealth, 0, maxHealth, 0, 1);
+        p.fill(p.lerpColor(p.color(255, 0, 0), p.color(0, 255, 0), healthColour));
+        float m = p.map(currentHealth, 0, maxHealth, 0, 2);
+        p.rect(pos.x, pos.y + 20, 10 * m, 2, 7);
+        p.pushMatrix();
+        p.rectMode(p.CENTER);
+        p.fill(220, 20, 60);
+        p.rect(pos.x, pos.y, 25, 25);
+        p.popMatrix();
+        if(Settings.rangeLines) {
+            p.pushMatrix();
+            p.noFill();
+            //p.ellipseMode(p.CENTER);
+            p.stroke(204, 102, 0);
+            p.ellipse(pos.x, pos.y, range*2, range*2);
+            p.popMatrix();
+        }
     }
 
     void drawProjectile(PApplet p, PVector position, float theta, int currentHealth, int maxHealth) {

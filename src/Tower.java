@@ -37,7 +37,7 @@ public class Tower {
 
     void tick() {
         checkDamage();
-        d.drawTower(p, pos, currentHealth, maxHealth);
+        d.drawTower(p, pos, currentHealth, maxHealth, range);
         PVector target = setTarget();
         float distance = PVector.dist(target, pos);
         if(player) {

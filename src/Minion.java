@@ -56,7 +56,8 @@ class Minion {
         movement();
         seek(giveTarget());
         shoot();
-        d.drawHero(p, pos, theta, r, currentHealth, maxHealth);
+        //d.drawHero(p, pos, theta, r, currentHealth, maxHealth);
+        d.drawMinion(p, pos, currentHealth, maxHealth, range);
     }
 
     boolean checkDead() {

@@ -4,4 +4,5 @@ public class Settings {
     static int height = 720;
     static double maxDistance = Math.sqrt((width*width) + (height*height));
     static boolean chasePoints = true;
+    static boolean rangeLines = false;
 }
