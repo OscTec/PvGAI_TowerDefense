@@ -1,7 +1,6 @@
 import com.sun.jdi.ArrayReference;
 import processing.core.PApplet;
 import processing.core.PVector;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
@@ -15,8 +14,12 @@ class Environment {
     protected static ArrayList<Hero> heroes = new ArrayList<>();
     static ArrayList<Minion> minions = new ArrayList<>();
     private ArrayList<Tower> playerTowers = new ArrayList<>();
+    private static ArrayList<Tower> aiTowers = new ArrayList<>();
     //static ArrayList<Point> topLanePoints = new ArrayList<>();
-    private static ArrayList<Projectile> projectiles = new ArrayList<>();
+    //private static ArrayList<Projectile> projectiles = new ArrayList<>();
+    private static ArrayList<Projectile> playerProjectiles = new ArrayList<>();
+    private static ArrayList<Projectile> aiProjectiles = new ArrayList<>();
+
     private ArrayList<PVector> topLanePoints= new ArrayList<>();
     private ArrayList<PVector> midLanePoints= new ArrayList<>();
     private ArrayList<PVector> btmLanePoints= new ArrayList<>();
@@ -46,6 +49,9 @@ class Environment {
         for (Tower t : playerTowers) {
             t.tick();
         }
+        for (Tower t : aiTowers) {
+            t.tick();
+        }
         for (PVector pos: topLanePoints) {
             d.drawWaypoint(p, pos);
         }
@@ -65,13 +71,34 @@ class Environment {
 //                minions.remove(i);
 //            }
 //        }
-        for (int i = 0; i < projectiles.size(); i++) {
-            if (!projectiles.get(i).projectileAlive()) {
-                projectiles.remove(i);
+
+        for (Projectile pro : playerProjectiles) {
+            if (!pro.projectileAlive()) {
+                playerProjectiles.remove(pro);
+                return;
             } else {
-                projectiles.get(i).tick(p);
+                pro.tick(p);
             }
+
         }
+
+        for (Projectile pro : aiProjectiles) {
+            if (!pro.projectileAlive()) {
+                aiProjectiles.remove(pro);
+                return;
+            } else {
+                pro.tick(p);
+            }
+
+        }
+
+//        for (int i = 0; i < projectiles.size(); i++) {
+//            if (!projectiles.get(i).projectileAlive()) {
+//                projectiles.remove(i);
+//            } else {
+//                projectiles.get(i).tick(p);
+//            }
+//        }
         d.drawFrameRate(p);
     }
 
@@ -90,7 +117,9 @@ class Environment {
     }
 
     private void buildTowers() {
-        playerTowers.add(new Tower(p, new PVector(p.width*0.5f, p.height*0.1f), 10,10,10,1f));
+        //playerTowers.add(new Tower(p, new PVector(p.width*0.5f, p.height*0.1f), 10,10,50,2f));
+        aiTowers.add(new Tower(p, new PVector(p.width*0.5f, p.height*0.1f), 10,10,50,1f));
+
     }
 
     private void buildTopLane() {
@@ -127,22 +156,44 @@ class Environment {
         d.drawMouse(p, mouse);
     }
 
-    static void addProjectile(PVector position, PVector velocity, float theta) {
+//    static void addProjectile(PVector position, PVector velocity, float theta) {
+//        PVector bPos = (PVector) deepClone(position);
+//        PVector bVel = (PVector) deepClone(velocity);
+//        Float bTheta = (Float) deepClone(theta);
+//        projectiles.add(new Projectile(bPos, bVel, bTheta));
+//    }
+
+    static void addAiProjectile(PVector position, PVector velocity) {
         PVector bPos = (PVector) deepClone(position);
         PVector bVel = (PVector) deepClone(velocity);
-        Float bTheta = (Float) deepClone(theta);
-        projectiles.add(new Projectile(bPos, bVel, bTheta));
+        aiProjectiles.add(new Projectile(bPos, bVel));
     }
 
-    static void addProjectile(PVector position, PVector velocity) {
+    static void addPlayerProjectile(PVector position, PVector velocity) {
         PVector bPos = (PVector) deepClone(position);
         PVector bVel = (PVector) deepClone(velocity);
-        projectiles.add(new Projectile(bPos, bVel));
+        playerProjectiles.add(new Projectile(bPos, bVel));
     }
 
-    static ArrayList<Projectile> getProjectiles() {
-        return projectiles;
+//    static void addProjectile(PVector position, PVector velocity) {
+//        PVector bPos = (PVector) deepClone(position);
+//        PVector bVel = (PVector) deepClone(velocity);
+//        projectiles.add(new Projectile(bPos, bVel));
+//    }
+
+    static  ArrayList<Projectile> getPlayerProjectiles() {
+        return playerProjectiles;
     }
+
+    static ArrayList<Projectile> getAiProjectiles() {
+        return  aiProjectiles;
+    }
+
+//    static ArrayList<Projectile> getProjectiles() {
+//        return projectiles;
+//    }
+
+    static ArrayList<Tower> getAiTowers() {return aiTowers;}
 
     static ArrayList<Minion> getMinions() {
         return minions;

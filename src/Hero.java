@@ -1,5 +1,6 @@
 import processing.core.PApplet;
 import processing.core.PVector;
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -16,22 +17,11 @@ class Hero implements Serializable {
     private float r;
     private float maxForce;
     private float maxSpeed;
-    private int currentCoolDown = 50;
-    private int maxCoolDown = 50;
     private int currentHealth;
     private int maxHealth = 100;
-    //private int health = 100;
-
-
-
-    Hero() {
-        acceleration = new PVector(0, 0);
-        velocity = new PVector(0, 0);
-        position = new PVector(100, 100);
-        r = 6;
-        maxSpeed = 4;
-        maxForce = 0.1f;
-    }
+    private float fireRate = 10;
+    private int range = 50;
+    private Stopwatch sw = new Stopwatch();
 
     Hero(PApplet p, PVector pos, ArrayList points) {
         this.p = p;
@@ -46,42 +36,13 @@ class Hero implements Serializable {
         currentHealth = maxHealth;
     }
 
-    Hero(PApplet p, PVector pos) {
-        this.p = p;
-        acceleration = new PVector(0, 0);
-        velocity = new PVector(0, -2);
-        position = pos;
-        r = 6;
-        maxSpeed = 1;
-        maxForce = 0.1f;
-    }
 
-    private Hero(PVector position, PVector velocity, float theta) {
-        acceleration = new PVector(0, 0);
-        this.velocity = velocity;
-        this.position = position;
-        this.theta = theta;
-        r = 6;
-        maxSpeed = 4;
-        maxForce = 0.1f;
-    }
-
-    void collisionCheck() {
-        boolean hit = false;
-        for (Projectile i : Environment.getProjectiles()) {
-            //System.out.println(this.position);
-            if ((i.position.x <= this.position.x + 10 && i.position.x >= this.position.x - 10) && (i.position.y <= this.position.y + 10 && i.position.y >= this.position.y - 10)) {
-                //hit = true;
-
-                currentHealth = currentHealth - i.getDamage();
-                System.out.println("Health: " + currentHealth);
-                Environment.getProjectiles().remove(i);
-                return;
-            } else {
-                //hit = false;
-            }
-        }
-        //return hit;
+    void tick(PApplet p, PVector target) {
+        checkDamage();
+        movement();
+        seek(giveTarget(target));
+        shoot();
+        d.drawHero(p, position, theta, r, currentHealth, maxHealth);
     }
 
     boolean checkDead() {
@@ -92,27 +53,26 @@ class Hero implements Serializable {
         }
     }
 
-    void tick(PApplet p, PVector target) {
-        collisionCheck();
-        movement();
-        seek(giveTarget(target));
+    private void checkDamage() {
+        Projectile hit = Methods.collisionCheck(position, Environment.getAiProjectiles());
+        if (hit != null) {
+            System.out.println("HEalth: " + currentHealth);
+            currentHealth = currentHealth - hit.getDamage();
+            Environment.getAiProjectiles().remove(hit);
+        }
+    }
 
-//        if (currentCoolDown < 0) {
-//            shoot();
-//            currentCoolDown = maxCoolDown;
-//        } else {
-//            currentCoolDown--;
-//        }
 
-//        for (int i = 0; i < projectiles.size(); i++) {
-//            if (!projectiles.get(i).projectileAlive()) {
-//                projectiles.remove(i);
-//            } else {
-//                projectiles.get(i).tick(p);
-//            }
-//        }
-        //d.drawHero(p, position, theta, r);
-        d.drawHero(p, position, theta, r, currentHealth, maxHealth);
+
+
+
+    void shoot() {
+        PVector target = Methods.findTarget(position, Environment.getAiTowers());
+        float distance = PVector.dist(target, position);
+        if (distance <= range && sw.elapsedTime() >= 1 / fireRate) {
+            Environment.addPlayerProjectile(position, Methods.seek(position, target));
+            sw.reset();
+        }
     }
 
     private void movement() {
@@ -124,23 +84,7 @@ class Hero implements Serializable {
         acceleration.mult(0);
     }
 
-    void shoot() {
-        if (projectiles.size() < 3) {
-            Environment.addProjectile(position, velocity);
-            //Environment.addProjectile(position, velocity, theta);
-
-//            PVector bPos = (PVector) deepClone(position);
-//            PVector bVel = (PVector) deepClone(velocity);
-//            Float bTheta = (Float) deepClone(theta);
-//            projectiles.add(new Projectile(bPos, bVel, bTheta));
-        }
-    }
-
-    private void applyForce(PVector force) {
-        acceleration.add(force);
-    }
-
-    void seek(PVector target) {
+    private void seek(PVector target) {
         PVector desired = PVector.sub(target, position);
         desired.setMag(maxSpeed);
         PVector steer = PVector.sub(desired, velocity);
@@ -148,40 +92,47 @@ class Hero implements Serializable {
         applyForce(steer);
     }
 
-    PVector giveTarget(PVector mouse) {
+    private void applyForce(PVector force) {
+        acceleration.add(force);
+    }
+
+
+
+    private PVector giveTarget(PVector mouse) {
         PVector seekThis = new PVector(p.width / 2, p.height / 2);
         double lowestDistance = Settings.maxDistance;
-        if(Settings.chaseMouse == true) {
-            seekThis = mouse;
+//        if (Settings.chaseMouse == true) {
+//            seekThis = mouse;
+//        }
+
+        PVector closestTowerPos = Methods.findTarget(position, Environment.getAiTowers());
+        float distance = PVector.dist(position, closestTowerPos);
+        if (distance <= range) {
+            //Environment.addPlayerProjectile(position, Methods.seek(position, closestTowerPos));
+            System.out.println("Tower in range");
+            seekThis = position;
+            //sw.reset();
+            //Projectile(pos, seek(target));
         } else {
-            if (Environment.minions.isEmpty()) {
-                //return seekThis;
-                System.out.println("No minions");
-            }
+//            if (Environment.minions.isEmpty()) {
+//                //return seekThis;
+//                System.out.println("No minions");
+//            }
 
             if (Settings.chasePoints) {
                 seekThis = followLane();
-
-//                for (PVector p : wayPoints) {
-//                    float d = position.dist(p);
+            }
+//            else {
+//                for (int i = 0; i < Environment.minions.size(); i++) {
+//                    float d = position.dist(Environment.minions.get(i).position);
 //                    if (d < lowestDistance) {
 //                        lowestDistance = d;
-//                        seekThis = p;
-//
+//                        seekThis = Environment.minions.get(i).position;
+//                        System.out.println(i);
 //                    }
 //                }
-            }
-            else {
-                for (int i = 0; i < Environment.minions.size(); i++) {
-                    float d = position.dist(Environment.minions.get(i).position);
-                    if (d < lowestDistance) {
-                        lowestDistance = d;
-                        seekThis = Environment.minions.get(i).position;
-                        System.out.println(i);
-                    }
-                }
-
-            }
+//
+//            }
 
         }
         return seekThis;
@@ -202,6 +153,35 @@ class Hero implements Serializable {
     PVector getPosition() {
         return position;
     }
+
+
+//    void collisionCheck() {
+//        //boolean hit = false;
+//        for (Projectile i : Environment.getAiProjectiles()) {
+//            //System.out.println(this.position);
+//            if ((i.position.x <= this.position.x + 10 && i.position.x >= this.position.x - 10) && (i.position.y <= this.position.y + 10 && i.position.y >= this.position.y - 10)) {
+//                //hit = true;
+//
+//                currentHealth = currentHealth - i.getDamage();
+//                System.out.println("Health: " + currentHealth);
+//                Environment.getAiProjectiles().remove(i);
+//                return;
+//            }
+//        }
+//
+//    }
+
+    //    void shoot() {
+//        if (projectiles.size() < 3) {
+//            Environment.addProjectile(position, velocity);
+//            //Environment.addProjectile(position, velocity, theta);
+//
+//            PVector bPos = (PVector) deepClone(position);
+//            PVector bVel = (PVector) deepClone(velocity);
+//            Float bTheta = (Float) deepClone(theta);
+//            projectiles.add(new Projectile(bPos, bVel, bTheta));
+//        }
+//    }
 
 }
 

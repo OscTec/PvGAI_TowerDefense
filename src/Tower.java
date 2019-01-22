@@ -1,10 +1,12 @@
 import processing.core.PApplet;
 import processing.core.PVector;
 
+import java.util.ArrayList;
+
 public class Tower {
     private Display d = new Display();
     private PApplet p;
-    private PVector pos;
+    protected PVector pos;
     private int health;
     private int damage;
     private int range;
@@ -26,7 +28,8 @@ public class Tower {
         PVector target = setTarget();
         float distance = PVector.dist(target, pos);
         if(distance <= range && sw.elapsedTime() >= 1/fireRate) {
-                Environment.addProjectile(pos, seek(target));
+                Environment.addAiProjectile(pos, seek(target));
+                System.out.println("Shot fired");
                 sw.reset();
             //Projectile(pos, seek(target));
         }
@@ -47,6 +50,21 @@ public class Tower {
         return seekThis;
     }
 
+    PVector setTarget(PVector pos, ArrayList<Hero> target) {
+        PVector seekThis = new PVector(p.width / 2, p.height / 2);
+        double lowestDistance = Settings.maxDistance;
+        for (Hero h : target) {
+            float d = pos.dist(h.position);
+            if (d < lowestDistance) {
+                lowestDistance = d;
+                seekThis = h.position;
+
+            }
+        }
+        return seekThis;
+
+    }
+
     PVector seek(PVector target) {
         PVector desired = PVector.sub(target, pos);
         //desired.setMag(maxSpeed);
@@ -54,6 +72,10 @@ public class Tower {
         //steer.limit(maxForce);
         //applyForce(steer);
         return desired;
+    }
+
+    PVector getPos() {
+        return pos;
     }
 
 }

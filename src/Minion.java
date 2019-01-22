@@ -77,7 +77,7 @@ public class Minion {
 
     boolean collisionCheck() {
         boolean hit = false;
-        for (Projectile i : Environment.getProjectiles()) {
+        for (Projectile i : Environment.getPlayerProjectiles()) {
             //System.out.println(this.position);
             if ((i.position.x <= this.position.x + 10 && i.position.x >= this.position.x - 10) && (i.position.y <= this.position.y + 10 && i.position.y >= this.position.y - 10)) {
                 hit = true;
