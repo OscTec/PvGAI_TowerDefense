@@ -19,6 +19,7 @@ class Minion {
     private int maxHealth;
     private float fireRate;
     private int range;
+    private int damage;
     private boolean player;
     private Stopwatch sw = new Stopwatch();
 
@@ -37,14 +38,14 @@ class Minion {
             this.maxHealth = Stats.getPlayerMinionHealth();
             this.maxSpeed = Stats.getPlayerMinionSpeed();
             this.range = Stats.getPlayerMinionRange();
-            //this.damage = Stats.getPlayerMinionDamage();
+            this.damage = Stats.getPlayerMinionDamage();
             this.fireRate = Stats.getPlayerMinionAtkSpeed();
         }
         if(!player) {
             this.maxHealth = Stats.getAiMinionHealth();
             this.maxSpeed = Stats.getAiMinionSpeed();
             this.range = Stats.getAiMinionRange();
-            //this.damage = Stats.getAiMinionDamage();
+            this.damage = Stats.getAiMinionDamage();
             this.fireRate = Stats.getAiMinionAtkSpeed();
             waypointIndex = points.size()-1;
         }
@@ -106,7 +107,7 @@ class Minion {
             }
 
             if (Distance <= range && sw.elapsedTime() >= 1 / fireRate) {
-                Environment.addPlayerProjectile(pos, Methods.seek(pos, target));
+                Environment.addPlayerProjectile(pos, Methods.seek(pos, target), damage);
                 sw.reset();
             }
         } else {
@@ -127,7 +128,7 @@ class Minion {
             }
 
             if (Distance <= range && sw.elapsedTime() >= 1 / fireRate) {
-                Environment.addAiProjectile(pos, Methods.seek(pos, target));
+                Environment.addAiProjectile(pos, Methods.seek(pos, target), damage);
                 sw.reset();
             }
         }

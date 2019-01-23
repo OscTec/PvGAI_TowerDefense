@@ -113,6 +113,17 @@ class Display {
         }
     }
 
+    void drawLanes(PApplet p) {
+        p.pushMatrix();
+        p.rectMode(p.CENTER);
+        p.rect(p.width*0.1f, p.height*0.5f, p.width*0.05f, p.height*0.8f);
+        p.rect(p.width*0.9f, p.height*0.5f, p.width*0.05f, p.height*0.8f);
+        p.rect(p.width*0.5f, p.height*0.1f, p.width*0.85f, p.width*0.05f);
+        p.rect(p.width*0.5f, p.height*0.5f, p.width*0.85f, p.width*0.05f);
+        p.rect(p.width*0.5f, p.height*0.9f, p.width*0.85f, p.width*0.05f);
+        p.popMatrix();
+    }
+
     void drawProjectile(PApplet p, PVector position, float theta, int currentHealth, int maxHealth) {
         float healthColour = p.map(currentHealth, 0, maxHealth, 0, 1);
         p.fill(p.lerpColor(p.color(255, 0, 0), p.color(0, 255, 0), healthColour));

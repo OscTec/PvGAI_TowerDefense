@@ -42,12 +42,12 @@ public class Tower {
         float distance = PVector.dist(target, pos);
         if(player) {
             if (distance <= range && sw.elapsedTime() >= 1 / fireRate) {
-                Environment.addPlayerProjectile(pos, seek(target));
+                Environment.addPlayerProjectile(pos, seek(target), damage);
                 sw.reset();
             }
         } else {
             if (distance <= range && sw.elapsedTime() >= 1 / fireRate) {
-                Environment.addAiProjectile(pos, seek(target));
+                Environment.addAiProjectile(pos, seek(target), damage);
                 sw.reset();
             }
         }

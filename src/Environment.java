@@ -41,6 +41,7 @@ class Environment {
     }
 
     void tick() {
+        d.drawLanes(p);
 //        mouse();
 //        for (Hero h : heroes) {
 //            if (h.checkDead()) {
@@ -179,16 +180,16 @@ class Environment {
 //        d.drawMouse(p, mouse);
 //    }
 
-    static void addAiProjectile(PVector position, PVector velocity) {
+    static void addAiProjectile(PVector position, PVector velocity, int damage) {
         PVector bPos = (PVector) deepClone(position);
         PVector bVel = (PVector) deepClone(velocity);
-        aiProjectiles.add(new Projectile(bPos, bVel));
+        aiProjectiles.add(new Projectile(bPos, bVel, damage));
     }
 
-    static void addPlayerProjectile(PVector position, PVector velocity) {
+    static void addPlayerProjectile(PVector position, PVector velocity, int damage) {
         PVector bPos = (PVector) deepClone(position);
         PVector bVel = (PVector) deepClone(velocity);
-        playerProjectiles.add(new Projectile(bPos, bVel));
+        playerProjectiles.add(new Projectile(bPos, bVel, damage));
     }
 
     static ArrayList<Minion> getPlayerMinions() {return playerMinions;}

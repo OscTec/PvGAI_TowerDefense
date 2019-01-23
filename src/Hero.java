@@ -69,7 +69,7 @@ class Hero implements Serializable {
         PVector target = Methods.findTarget(position, Environment.getAiTowers());
         float distance = PVector.dist(target, position);
         if (distance <= range && sw.elapsedTime() >= 1 / fireRate) {
-            Environment.addPlayerProjectile(position, Methods.seek(position, target));
+            Environment.addPlayerProjectile(position, Methods.seek(position, target), 10);
             sw.reset();
         }
     }

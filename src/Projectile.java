@@ -17,11 +17,18 @@ class Projectile {
         this.theta = theta;
     }
 
-    Projectile(PVector pos, PVector target) {
+//    Projectile(PVector pos, PVector target) {
+//        this.position = pos;
+//        this.velocity = target;
+//    }
+
+    Projectile(PVector pos, PVector target, int damage) {
         this.position = pos;
         this.velocity = target;
-
+        this.damage = damage;
     }
+
+
 
     void tick(PApplet p) {
         velocity.setMag(5);
