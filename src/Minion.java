@@ -98,12 +98,19 @@ class Minion {
             PVector mTarget = Methods.findMinion(pos, Environment.getAiMinions());
             float mDistance = PVector.dist(mTarget, pos);
 
+            PVector hTarget = Environment.getAiHQ().getPos();
+            float hDistance = PVector.dist(hTarget, pos);
+
             if(tDistance <= mDistance) {
                 Distance = tDistance;
                 target = tTarget;
             } else {
                 Distance = mDistance;
                 target = mTarget;
+            }
+            if(hDistance <= Distance) {
+                Distance = hDistance;
+                target = hTarget;
             }
 
             if (Distance <= range && sw.elapsedTime() >= 1 / fireRate) {
@@ -168,6 +175,9 @@ class Minion {
             } else {
                 closestTarget = closestMinionPos;
             }
+            if(pos.dist(Environment.getAiHQ().getPos()) <= pos.dist(closestTarget)){
+                closestTarget = Environment.getAiHQ().getPos();
+            }
         } else {
             closestTowerPos = Methods.findTarget(pos, Environment.getPlayerTowers());
             closestMinionPos = Methods.findMinion(pos, Environment.getPlayerMinions());
@@ -175,6 +185,9 @@ class Minion {
                 closestTarget = closestTowerPos;
             } else {
                 closestTarget = closestMinionPos;
+            }
+            if(pos.dist(Environment.getPlayerHQ().getPos()) <= pos.dist(closestTarget)){
+                closestTarget = Environment.getPlayerHQ().getPos();
             }
         }
         float distance = PVector.dist(pos, closestTarget);

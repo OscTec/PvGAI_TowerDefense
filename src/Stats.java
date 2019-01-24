@@ -4,19 +4,21 @@ public class Stats {
     private static int playerMinionHealth = 100;
     private static int playerMinionSpeed = 2;
     private static int playerMinionRange = 50;
-    private static int playerMinionDamage = 10;
+    private static int playerMinionDamage = 100;
     private static float playerMinionAtkSpeed = 2;
 
     private static int aiMinionHealth = 100;
     private static int aiMinionSpeed = 2;
     private static int aiMinionRange = 50;
-    private static int aiMinionDamage = 10;
+    private static int aiMinionDamage = 100;
     private static float aiMinionAtkSpeed  = 2;
 
     private static int towerHealth = 500;
     private static int towerDamage = 10;
     private static int towerRange = 100;
     private static float towerAtkSpeed = 2;
+
+    private static int hqHealth = 2000;
 
     static int getMinionSpawnRate() {
         return minionSpawnRate;
@@ -77,6 +79,8 @@ public class Stats {
     static float getTowerAtkSpeed() {
         return towerAtkSpeed;
     }
+
+    static int getHqHealth() {return hqHealth;}
 
 
 }

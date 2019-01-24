@@ -19,6 +19,9 @@ class Environment {
     private static ArrayList<Minion> aiMinions = new ArrayList<>();
     private static ArrayList<Tower> playerTowers = new ArrayList<>();
     private static ArrayList<Tower> aiTowers = new ArrayList<>();
+
+    private static Headquarters playerHQ;
+    private static Headquarters aiHQ;
     //static ArrayList<Point> topLanePoints = new ArrayList<>();
     //private static ArrayList<Projectile> projectiles = new ArrayList<>();
     private static ArrayList<Projectile> playerProjectiles = new ArrayList<>();
@@ -37,11 +40,24 @@ class Environment {
         //buildHeroes();
         buildMinions();
         buildTowers();
+        buildHQ();
 
     }
 
     void tick() {
         d.drawLanes(p);
+        d.drawStats(p);
+        if(playerHQ.checkDead()) {
+            System.out.println("AI Wins");
+        } else {
+            playerHQ.tick();
+        }
+
+        if(aiHQ.checkDead()) {
+            System.out.println("Player Wins");
+        } else {
+            aiHQ.tick();
+        }
 //        mouse();
 //        for (Hero h : heroes) {
 //            if (h.checkDead()) {
@@ -57,6 +73,8 @@ class Environment {
                 return;
             }
             m.tick(p);
+
+
         }
 
         for (Minion m : aiMinions) {
@@ -137,23 +155,28 @@ class Environment {
         //aiTowers.add(new Tower(p, new PVector(p.width*0.5f, p.height*0.5f), 10,10,70,1f));
         //aiTowers.add(new Tower(p, new PVector(p.width*0.5f, p.height*0.9f), 10,10,70,1f));
 
-        playerTowers.add(new Tower(p, new PVector(p.width*0.3f, p.height*0.1f), true));
+        playerTowers.add(new Tower(p, new PVector(p.width*0.3f, p.height*0.15f), true));
         playerTowers.add(new Tower(p, new PVector(p.width*0.3f, p.height*0.5f), true));
-        playerTowers.add(new Tower(p, new PVector(p.width*0.3f, p.height*0.9f), true));
+        playerTowers.add(new Tower(p, new PVector(p.width*0.3f, p.height*0.85f), true));
 
-        aiTowers.add(new Tower(p, new PVector(p.width*0.7f, p.height*0.1f), false));
+        aiTowers.add(new Tower(p, new PVector(p.width*0.7f, p.height*0.15f), false));
         aiTowers.add(new Tower(p, new PVector(p.width*0.7f, p.height*0.5f), false));
-        aiTowers.add(new Tower(p, new PVector(p.width*0.7f, p.height*0.9f), false));
+        aiTowers.add(new Tower(p, new PVector(p.width*0.7f, p.height*0.85f), false));
 
+    }
+
+    private void buildHQ() {
+        playerHQ = new Headquarters(p, new PVector(p.width*0.1f, p.height*0.5f), true);
+        aiHQ = new Headquarters(p, new PVector(p.width*0.9f, p.height*0.5f), false);
     }
 
     private void buildTopLane() {
         topLanePoints.add(new PVector(p.width*0.1f, p.height*0.5f - p.height*0.1f));
-        topLanePoints.add(new PVector(p.width*0.1f, p.height*0.1f));
-        topLanePoints.add(new PVector(p.width*0.25f, p.height*0.1f));
-        topLanePoints.add(new PVector(p.width*0.5f, p.height*0.1f));
-        topLanePoints.add(new PVector(p.width*0.75f, p.height*0.1f));
-        topLanePoints.add(new PVector(p.width*0.9f, p.height*0.1f));
+        topLanePoints.add(new PVector(p.width*0.1f, p.height*0.15f));
+        topLanePoints.add(new PVector(p.width*0.25f, p.height*0.15f));
+        topLanePoints.add(new PVector(p.width*0.5f, p.height*0.15f));
+        topLanePoints.add(new PVector(p.width*0.75f, p.height*0.15f));
+        topLanePoints.add(new PVector(p.width*0.9f, p.height*0.15f));
         topLanePoints.add(new PVector(p.width*0.9f, p.height*0.5f - p.height*0.1f));
     }
 
@@ -167,11 +190,11 @@ class Environment {
 
     private void buildBtmLane() {
         btmLanePoints.add(new PVector(p.width*0.1f, p.height*0.5f + p.height*0.1f));
-        btmLanePoints.add(new PVector(p.width*0.1f, p.height*0.9f));
-        btmLanePoints.add(new PVector(p.width*0.25f, p.height*0.9f));
-        btmLanePoints.add(new PVector(p.width*0.5f, p.height*0.9f));
-        btmLanePoints.add(new PVector(p.width*0.75f, p.height*0.9f));
-        btmLanePoints.add(new PVector(p.width*0.9f, p.height*0.9f));
+        btmLanePoints.add(new PVector(p.width*0.1f, p.height*0.85f));
+        btmLanePoints.add(new PVector(p.width*0.25f, p.height*0.85f));
+        btmLanePoints.add(new PVector(p.width*0.5f, p.height*0.85f));
+        btmLanePoints.add(new PVector(p.width*0.75f, p.height*0.85f));
+        btmLanePoints.add(new PVector(p.width*0.9f, p.height*0.85f));
         btmLanePoints.add(new PVector(p.width*0.9f, p.height*0.5f + p.height*0.1f));
     }
 
@@ -203,6 +226,10 @@ class Environment {
     static ArrayList<Tower> getPlayerTowers() {return playerTowers;}
 
     static ArrayList<Tower> getAiTowers() {return aiTowers;}
+
+    static Headquarters getPlayerHQ() {return playerHQ;}
+
+    static Headquarters getAiHQ() {return aiHQ;}
 
     private static Object deepClone(Object object) {
         try {

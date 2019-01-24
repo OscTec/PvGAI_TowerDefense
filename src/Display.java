@@ -1,6 +1,8 @@
 import processing.core.PApplet;
 import processing.core.PVector;
 
+import java.beans.PropertyVetoException;
+
 class Display {
 
     void drawHero(PApplet p, PVector position, float theta, float r) {
@@ -19,17 +21,19 @@ class Display {
     }
 
     void drawHero(PApplet p, PVector pos, float theta, float r, int currentHealth, int maxHealth) {
+        p.pushMatrix();
         float healthColour = p.map(currentHealth, 0, maxHealth, 0, 1);
         p.fill(p.lerpColor(p.color(255, 0, 0), p.color(0, 255, 0), healthColour));
         float m = p.map(currentHealth, 0, maxHealth, 0, 2);
         p.arc(pos.x, pos.y, 30, 30, 0, m * (p.PI), p.PIE);
-        p.pushMatrix();
+        //p.pushMatrix();
         p.fill(220, 20, 60);
         p.ellipse(pos.x, pos.y, 15, 15);
         p.popMatrix();
     }
 
     void drawMinion(PApplet p, PVector pos, int currentHealth, int maxHealth, int range) {
+        p.pushMatrix();
 
         float healthColour = p.map(currentHealth, 0, maxHealth, 0, 1);
         p.fill(p.lerpColor(p.color(255, 0, 0), p.color(0, 255, 0), healthColour));
@@ -48,6 +52,7 @@ class Display {
             p.ellipse(pos.x, pos.y, range*2, range*2);
             p.popMatrix();
         }
+        p.popMatrix();
     }
 
     void drawEnemy(PApplet p, PVector position, float theta, float r, int currentHealth, int maxHealth) {
@@ -93,6 +98,7 @@ class Display {
     }
 
     void drawTower(PApplet p, PVector pos, int currentHealth, int maxHealth, int range) {
+        p.pushMatrix();
         p.rectMode(p.RADIUS);
         float healthColour = p.map(currentHealth, 0, maxHealth, 0, 1);
         p.fill(p.lerpColor(p.color(255, 0, 0), p.color(0, 255, 0), healthColour));
@@ -111,16 +117,18 @@ class Display {
             p.ellipse(pos.x, pos.y, range*2, range*2);
             p.popMatrix();
         }
+        p.popMatrix();
     }
 
     void drawLanes(PApplet p) {
         p.pushMatrix();
+        p.fill(255,255,255);
         p.rectMode(p.CENTER);
-        p.rect(p.width*0.1f, p.height*0.5f, p.width*0.05f, p.height*0.8f);
-        p.rect(p.width*0.9f, p.height*0.5f, p.width*0.05f, p.height*0.8f);
-        p.rect(p.width*0.5f, p.height*0.1f, p.width*0.85f, p.width*0.05f);
+        p.rect(p.width*0.1f, p.height*0.5f, p.width*0.05f, p.height*0.78f);
+        p.rect(p.width*0.9f, p.height*0.5f, p.width*0.05f, p.height*0.78f);
+        p.rect(p.width*0.5f, p.height*0.15f, p.width*0.85f, p.width*0.05f);
         p.rect(p.width*0.5f, p.height*0.5f, p.width*0.85f, p.width*0.05f);
-        p.rect(p.width*0.5f, p.height*0.9f, p.width*0.85f, p.width*0.05f);
+        p.rect(p.width*0.5f, p.height*0.85f, p.width*0.85f, p.width*0.05f);
         p.popMatrix();
     }
 
@@ -134,6 +142,38 @@ class Display {
         p.ellipse(position.x, position.y, 15, 15);
         p.popMatrix();
     }
+
+    void drawHQ(PApplet p, PVector pos, int currentHealth) {
+        p.pushMatrix();
+        p.rectMode(p.RADIUS);
+        p.fill(125, 98, 0);
+        p.rect(pos.x, pos.y, 30, 30);
+        float healthColour = p.map(currentHealth, 0, Stats.getHqHealth(), 0, 1);
+        p.fill(p.lerpColor(p.color(255, 0, 0), p.color(0, 255, 0), healthColour));
+        float m = p.map(currentHealth, 0, Stats.getHqHealth(), 0, 2);
+        p.rect(pos.x, pos.y + 20, 10 * m, 2, 7);
+        p.popMatrix();
+    }
+
+    void drawStats(PApplet p) {
+        p.pushMatrix();
+        p.fill(0, 102, 153);
+        p.textSize(32);
+        p.text("HP: " + Stats.getPlayerMinionDamage(), p.width*0.01f, 30);
+        p.text("DMG: " + Stats.getPlayerMinionDamage(), p.width*0.2f, 30);
+        p.text("SPD: " + Stats.getPlayerMinionSpeed(), p.width*0.4f, 30);
+        p.text("Range: " + Stats.getPlayerMinionRange(), p.width*0.6f, 30);
+        p.text("Atk Rate: " + Stats.getPlayerMinionAtkSpeed(), p.width*0.8f, 30);
+
+        p.fill(255, 10, 15);
+        p.text("HP: " + Stats.getAiMinionDamage(), p.width*0.01f, p.height - 10);
+        p.text("DMG: " + Stats.getAiMinionDamage(), p.width*0.2f, p.height - 10);
+        p.text("SPD: " + Stats.getAiMinionSpeed(), p.width*0.4f, p.height - 10);
+        p.text("Range: " + Stats.getAiMinionRange(), p.width*0.6f, p.height - 10);
+        p.text("Atk Rate: " + Stats.getAiMinionAtkSpeed(), p.width*0.8f, p.height - 10);
+        p.popMatrix();
+    }
+
 
     void drawProjectile(PApplet p, PVector pos){
         p.ellipse(pos.x, pos.y, 15, 15);

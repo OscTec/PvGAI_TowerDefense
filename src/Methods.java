@@ -18,6 +18,7 @@ public class Methods {
         return seekThis;
     }
 
+
     protected static PVector findTarget(PVector pos, ArrayList<Tower> targets) {
         PVector seekThis = new PVector();
         double lowestDistance = Settings.maxDistance;
