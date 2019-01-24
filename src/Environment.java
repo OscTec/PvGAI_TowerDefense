@@ -63,47 +63,22 @@ class Environment {
         } else {
             aiHQ.tick();
         }
-//        mouse();
-//        for (Hero h : heroes) {
-//            if (h.checkDead()) {
-//                heroes.remove(h);
-//                return;
-//            }
-//            h.tick(p, mouse);
-//        }
-
-        for (Minion m : playerMinions) {
-            if (m.checkDead()) {
-                playerMinions.remove(m);
-                return;
-            }
-            m.tick(p);
-
-
-        }
-
-        for (Minion m : aiMinions) {
-            if (m.checkDead()) {
-                aiMinions.remove(m);
-                return;
-            }
-            m.tick(p);
-        }
 
         for (Tower t : playerTowers) {
-            if (t.checkDead()) {
-                playerTowers.remove(t);
-                return;
-            }
-            t.tick();
+            t.drawTower();
         }
+
         for (Tower t : aiTowers) {
-            if (t.checkDead()) {
-                aiTowers.remove(t);
-                return;
-            }
-            t.tick();
+            t.drawTower();
         }
+        for (Minion m : playerMinions) {
+            m.drawMinion();
+        }
+        for (Minion m : aiMinions) {
+            m.drawMinion();
+        }
+
+
         for (PVector pos: topLanePoints) {
             d.drawWaypoint(p, pos);
         }
@@ -132,7 +107,38 @@ class Environment {
             } else {
                 pro.tick(p);
             }
+        }
 
+        for (Tower t : playerTowers) {
+            if (t.checkDead()) {
+                playerTowers.remove(t);
+                return;
+            }
+            t.tick();
+        }
+        for (Tower t : aiTowers) {
+            if (t.checkDead()) {
+                aiTowers.remove(t);
+                return;
+            }
+            t.tick();
+        }
+
+        for (Minion m : playerMinions) {
+            if (m.checkDead()) {
+                playerMinions.remove(m);
+                return;
+            }
+            //m.drawMinion();
+            m.tick(p);
+        }
+        for (Minion m : aiMinions) {
+            if (m.checkDead()) {
+                aiMinions.remove(m);
+                return;
+            }
+            //m.drawMinion();
+            m.tick(p);
         }
         d.drawFrameRate(p);
     }

@@ -58,6 +58,10 @@ class Minion {
         seek(giveTarget());
         shoot();
         //d.drawHero(p, pos, theta, r, currentHealth, maxHealth);
+        //d.drawMinion(p, pos, currentHealth, maxHealth, range);
+    }
+
+    void drawMinion() {
         d.drawMinion(p, pos, currentHealth, maxHealth, range);
     }
 
