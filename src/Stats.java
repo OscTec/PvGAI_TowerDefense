@@ -28,21 +28,31 @@ public class Stats {
         return playerMinionHealth;
     }
 
+    static void setPlayerMinionHealth(int value) { playerMinionHealth = playerMinionHealth + value; }
+
     static int getPlayerMinionSpeed() {
         return playerMinionSpeed;
     }
+
+    static void setPlayerMinionSpeed(int value) { playerMinionSpeed = playerMinionSpeed + value;}
 
     static int getPlayerMinionRange() {
         return playerMinionRange;
     }
 
+    static void setPlayerMinionRange(int value) { playerMinionRange = playerMinionRange + value;}
+
     static  int getPlayerMinionDamage() {
         return playerMinionDamage;
     }
 
+    static void setPlayerMinionDamage(int value) { playerMinionDamage = playerMinionDamage + value;}
+
     static float getPlayerMinionAtkSpeed() {
         return playerMinionAtkSpeed;
     }
+
+    static void setPlayerMinionAtkSpeed(float value) { playerMinionAtkSpeed = playerMinionAtkSpeed + value;}
 
     static int getAiMinionHealth() {
         return aiMinionHealth;

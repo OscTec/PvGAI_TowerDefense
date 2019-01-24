@@ -9,6 +9,7 @@ import java.util.ArrayList;
 class Environment {
     private PApplet p;
     private Display d = new Display();
+    private StatChange sc;
     //private PVector mouse;
     private Stopwatch sw = new Stopwatch();
     private int minionSpawnRate = Stats.getMinionSpawnRate();
@@ -34,6 +35,7 @@ class Environment {
 
     void setup(PApplet p) {
         this.p = p;
+        sc = new StatChange(p);
         buildTopLane();
         buildMidLane();
         buildBtmLane();
@@ -47,6 +49,7 @@ class Environment {
     void tick() {
         d.drawLanes(p);
         d.drawStats(p);
+        sc.tick();
         if(playerHQ.checkDead()) {
             System.out.println("AI Wins");
         } else {

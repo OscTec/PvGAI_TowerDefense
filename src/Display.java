@@ -159,14 +159,14 @@ class Display {
         p.pushMatrix();
         p.fill(0, 102, 153);
         p.textSize(32);
-        p.text("HP: " + Stats.getPlayerMinionDamage(), p.width*0.01f, 30);
+        p.text("HP: " + Stats.getPlayerMinionHealth(), p.width*0.01f, 30);
         p.text("DMG: " + Stats.getPlayerMinionDamage(), p.width*0.2f, 30);
         p.text("SPD: " + Stats.getPlayerMinionSpeed(), p.width*0.4f, 30);
         p.text("Range: " + Stats.getPlayerMinionRange(), p.width*0.6f, 30);
         p.text("Atk Rate: " + Stats.getPlayerMinionAtkSpeed(), p.width*0.8f, 30);
 
         p.fill(255, 10, 15);
-        p.text("HP: " + Stats.getAiMinionDamage(), p.width*0.01f, p.height - 10);
+        p.text("HP: " + Stats.getAiMinionHealth(), p.width*0.01f, p.height - 10);
         p.text("DMG: " + Stats.getAiMinionDamage(), p.width*0.2f, p.height - 10);
         p.text("SPD: " + Stats.getAiMinionSpeed(), p.width*0.4f, p.height - 10);
         p.text("Range: " + Stats.getAiMinionRange(), p.width*0.6f, p.height - 10);
