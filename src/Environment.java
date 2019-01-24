@@ -160,12 +160,18 @@ class Environment {
         //aiTowers.add(new Tower(p, new PVector(p.width*0.5f, p.height*0.5f), 10,10,70,1f));
         //aiTowers.add(new Tower(p, new PVector(p.width*0.5f, p.height*0.9f), 10,10,70,1f));
 
+        playerTowers.add(new Tower(p, new PVector(p.width*0.1f, p.height*0.15f), true));
         playerTowers.add(new Tower(p, new PVector(p.width*0.3f, p.height*0.15f), true));
-        playerTowers.add(new Tower(p, new PVector(p.width*0.3f, p.height*0.5f), true));
+        playerTowers.add(new Tower(p, new PVector(p.width*0.2f, p.height*0.5f), true));
+        playerTowers.add(new Tower(p, new PVector(p.width*0.4f, p.height*0.5f), true));
+        playerTowers.add(new Tower(p, new PVector(p.width*0.1f, p.height*0.85f), true));
         playerTowers.add(new Tower(p, new PVector(p.width*0.3f, p.height*0.85f), true));
 
+        aiTowers.add(new Tower(p, new PVector(p.width*0.9f, p.height*0.15f), false));
         aiTowers.add(new Tower(p, new PVector(p.width*0.7f, p.height*0.15f), false));
-        aiTowers.add(new Tower(p, new PVector(p.width*0.7f, p.height*0.5f), false));
+        aiTowers.add(new Tower(p, new PVector(p.width*0.8f, p.height*0.5f), false));
+        aiTowers.add(new Tower(p, new PVector(p.width*0.6f, p.height*0.5f), false));
+        aiTowers.add(new Tower(p, new PVector(p.width*0.9f, p.height*0.85f), false));
         aiTowers.add(new Tower(p, new PVector(p.width*0.7f, p.height*0.85f), false));
 
     }
