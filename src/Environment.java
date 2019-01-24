@@ -188,13 +188,13 @@ class Environment {
     }
 
     private void buildTopLane() {
-        topLanePoints.add(new PVector(p.width*0.1f, p.height*0.5f - p.height*0.1f));
+        topLanePoints.add(new PVector(p.width*0.1f, p.height*0.5f - 10));
         topLanePoints.add(new PVector(p.width*0.1f, p.height*0.15f));
         topLanePoints.add(new PVector(p.width*0.25f, p.height*0.15f));
         topLanePoints.add(new PVector(p.width*0.5f, p.height*0.15f));
         topLanePoints.add(new PVector(p.width*0.75f, p.height*0.15f));
         topLanePoints.add(new PVector(p.width*0.9f, p.height*0.15f));
-        topLanePoints.add(new PVector(p.width*0.9f, p.height*0.5f - p.height*0.1f));
+        topLanePoints.add(new PVector(p.width*0.9f, p.height*0.5f - 10));
     }
 
     private void buildMidLane() {
@@ -206,13 +206,13 @@ class Environment {
     }
 
     private void buildBtmLane() {
-        btmLanePoints.add(new PVector(p.width*0.1f, p.height*0.5f + p.height*0.1f));
+        btmLanePoints.add(new PVector(p.width*0.1f, p.height*0.5f + 10));
         btmLanePoints.add(new PVector(p.width*0.1f, p.height*0.85f));
         btmLanePoints.add(new PVector(p.width*0.25f, p.height*0.85f));
         btmLanePoints.add(new PVector(p.width*0.5f, p.height*0.85f));
         btmLanePoints.add(new PVector(p.width*0.75f, p.height*0.85f));
         btmLanePoints.add(new PVector(p.width*0.9f, p.height*0.85f));
-        btmLanePoints.add(new PVector(p.width*0.9f, p.height*0.5f + p.height*0.1f));
+        btmLanePoints.add(new PVector(p.width*0.9f, p.height*0.5f + 10));
     }
 
 //    private void mouse() {
