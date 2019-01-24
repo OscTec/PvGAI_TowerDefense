@@ -51,12 +51,14 @@ class Environment {
         d.drawStats(p);
         sc.tick();
         if(playerHQ.checkDead()) {
+            Stats.setAiWon(true);
             System.out.println("AI Wins");
         } else {
             playerHQ.tick();
         }
 
         if(aiHQ.checkDead()) {
+            Stats.setPlayerWon(true);
             System.out.println("Player Wins");
         } else {
             aiHQ.tick();

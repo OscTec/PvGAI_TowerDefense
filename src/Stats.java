@@ -1,4 +1,7 @@
 public class Stats {
+    private static boolean playerWon = false;
+    private static boolean aiWon = false;
+
     private static int minionSpawnRate = 5;
 
     private static int playerMinionHealth = 100;
@@ -19,6 +22,14 @@ public class Stats {
     private static float towerAtkSpeed = 2;
 
     private static int hqHealth = 2000;
+
+    static boolean getPlayerWon() { return playerWon;}
+
+    static void setPlayerWon(boolean value) {playerWon = value;}
+
+    static boolean getAiWon() { return aiWon;}
+
+    static void setAiWon(boolean value) {aiWon = value;}
 
     static int getMinionSpawnRate() {
         return minionSpawnRate;

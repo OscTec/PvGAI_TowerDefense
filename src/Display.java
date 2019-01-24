@@ -174,6 +174,32 @@ class Display {
         p.popMatrix();
     }
 
+    void drawMainMenu(PApplet p) {
+        p.pushMatrix();
+        //p.textAlign(p.CENTER, p.CENTER);
+        p.fill(0, 102, 153);
+        p.textSize(48);
+        p.text("PvAI Battle Arena", p.width*0.35f, p.height*0.5f - 50);
+        p.text("Press SPACEBAR to start", p.width*0.3f, p.height*0.5f);
+        p.popMatrix();
+    }
+
+    void drawPlayerWin(PApplet p) {
+        p.pushMatrix();
+        p.fill(0, 102, 153);
+        p.textSize(48);
+        p.text("Player Wins!", p.width*0.35f, p.height*0.5f - 50);
+        p.popMatrix();
+    }
+
+    void drawAIWin(PApplet p) {
+        p.pushMatrix();
+        p.fill(0, 102, 153);
+        p.textSize(48);
+        p.text("AI Wins!", p.width*0.35f, p.height*0.5f - 50);
+        p.popMatrix();
+    }
+
 
     void drawProjectile(PApplet p, PVector pos){
         p.ellipse(pos.x, pos.y, 15, 15);
