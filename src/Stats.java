@@ -83,21 +83,31 @@ public class Stats {
         return aiMinionHealth;
     }
 
+    static void setAiMinionHealth(int value) { aiMinionHealth = aiMinionHealth + value; }
+
     static int getAiMinionSpeed() {
         return aiMinionSpeed;
     }
+
+    static void setAiMinionSpeed(int value) { aiMinionSpeed = aiMinionSpeed + value;}
 
     static int getAiMinionRange() {
         return aiMinionRange;
     }
 
+    static void setAiMinionRange(int value) { aiMinionRange = aiMinionRange + value;}
+
     static int getAiMinionDamage() {
         return aiMinionDamage;
     }
 
+    static void setAiMinionDamage(int value) { aiMinionDamage = aiMinionDamage + value;}
+
     static float getAiMinionAtkSpeed() {
         return aiMinionAtkSpeed;
     }
+
+    static void setAiMinionAtkSpeed(float value) { aiMinionAtkSpeed = aiMinionAtkSpeed + value;}
 
     static int getTowerHealth() {
         return towerHealth;

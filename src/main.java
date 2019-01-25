@@ -33,6 +33,7 @@ public class main extends PApplet {
                 reset();
             }
         } else {
+            background(0);
             d.drawAIWin(this);
             if (key == ' ') {
                 reset();

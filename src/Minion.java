@@ -130,6 +130,9 @@ class Minion {
             PVector mTarget = Methods.findMinion(pos, Environment.getPlayerMinions());
             float mDistance = PVector.dist(mTarget, pos);
 
+            PVector hTarget = Environment.getPlayerHQ().getPos();
+            float hDistance = PVector.dist(hTarget, pos);
+
             if(tDistance <= mDistance) {
                 Distance = tDistance;
                 target = tTarget;
@@ -137,6 +140,11 @@ class Minion {
                 Distance = mDistance;
                 target = mTarget;
             }
+            if(hDistance <= Distance) {
+                Distance = hDistance;
+                target = hTarget;
+            }
+
 
             if (Distance <= range && sw.elapsedTime() >= 1 / fireRate) {
                 Environment.addAiProjectile(pos, Methods.seek(pos, target), damage);

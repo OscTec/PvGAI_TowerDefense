@@ -10,6 +10,7 @@ class Environment {
     private PApplet p;
     private Display d = new Display();
     private StatChange sc;
+    private AI ai;
     //private PVector mouse;
     private Stopwatch sw = new Stopwatch();
     private int minionSpawnRate = Stats.getMinionSpawnRate();
@@ -34,11 +35,13 @@ class Environment {
     void setup(PApplet p) {
         this.p = p;
         sc = new StatChange(p);
+        ai = new AI(p);
+        ai.assignPoints();
         buildTopLane();
         buildMidLane();
         buildBtmLane();
         //buildHeroes();
-        buildMinions();
+        //buildMinions();
         buildTowers();
         buildHQ();
     }
@@ -55,6 +58,7 @@ class Environment {
         aiTowers.clear();
         playerHQ = null;
         aiHQ = null;
+        ai = null;
     }
 
     void tick() {
