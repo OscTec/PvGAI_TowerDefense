@@ -5,6 +5,8 @@ import java.util.ArrayList;
 class Minion {
     private ArrayList<PVector> wayPoints;
     private int waypointIndex = 0;
+    private int damageDealt = 0;
+    private int shotsFired = 0;
     //private ArrayList<Projectile> projectiles = new ArrayList<>();
     private PVector pos;
     private PVector velocity;
@@ -14,7 +16,7 @@ class Minion {
     private float theta;
     private float r;
     private float maxForce;
-    private float maxSpeed;
+    private int maxSpeed;
     private int currentHealth;
     private int maxHealth;
     private float fireRate;
@@ -22,6 +24,15 @@ class Minion {
     private int damage;
     private boolean player;
     private Stopwatch sw = new Stopwatch();
+
+    Minion(PApplet p, int maxHealth, int maxSpeed, int range, int damage, float fireRate){
+        this.p = p;
+        this.maxHealth = maxHealth;
+        this.maxSpeed = maxSpeed;
+        this.range = range;
+        this.damage = damage;
+        this.fireRate = fireRate;
+    }
 
     Minion(PApplet p, PVector pos, ArrayList points, boolean player) {
         this.p = p;
@@ -69,6 +80,7 @@ class Minion {
         if (currentHealth <= 0) {
             return true;
         } else {
+            damageDealt = damage*shotsFired;
             return false;
         }
     }
@@ -147,6 +159,7 @@ class Minion {
 
 
             if (Distance <= range && sw.elapsedTime() >= 1 / fireRate) {
+                shotsFired++;
                 Environment.addAiProjectile(pos, Methods.seek(pos, target), damage);
                 sw.reset();
             }
@@ -231,8 +244,21 @@ class Minion {
         return wayPoints.get(waypointIndex);
     }
 
+    int getHealth() {return maxHealth;}
+
+    int getSpeed() {return maxSpeed;}
+
+    int getRange() {return range;}
+
+    int getDamage() {return damage;}
+
+    float getAtkSpeed() {return fireRate;}
+
+
     PVector getPos() {
         return pos;
     }
+
+    int getDamageDealt() { return damageDealt;}
 
 }

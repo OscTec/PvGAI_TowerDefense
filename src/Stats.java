@@ -127,5 +127,15 @@ public class Stats {
 
     static int getHqHealth() {return hqHealth;}
 
+    static void makeAiMinionHealth(int value) {aiMinionHealth = value;}
+
+    static void makeAiMinionSpeed(int value) {aiMinionSpeed = value;}
+
+    static void makeAiMinionRange(int value) {aiMinionRange = value;}
+
+    static void makeAiMinionDamage(int value) {aiMinionDamage = value;}
+
+    static void makeAiMinionAtkSpeed(float value) {aiMinionAtkSpeed = value;}
+
 
 }

@@ -150,6 +150,15 @@ class Environment {
         }
         for (Minion m : aiMinions) {
             if (m.checkDead()) {
+                if(ai.testMinion(m)) {
+                    int health =  (int) deepClone(m.getHealth());
+                    int speed = (int) deepClone(m.getSpeed());
+                    int range = (int) deepClone(m.getRange());
+                    int damage = (int) deepClone(m.getDamage());
+                    float atkSpeed = (float) deepClone(m.getAtkSpeed());
+                    ai.saveMinion(p, health, speed, range, damage, atkSpeed);
+                    ai.modStats();
+                }
                 aiMinions.remove(m);
                 return;
             }
