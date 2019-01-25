@@ -19,25 +19,46 @@ public class main extends PApplet {
 
     public void draw() {
         if(Stats.getPlayerWon() || Stats.getAiWon()) {
-            if(Stats.getPlayerWon()) {
-                background(0);
-                d.drawPlayerWin(this);
-            } else {
-                d.drawAIWin(this);
+            gameOver();
+        } else {
+            starting();
+        }
+    }
+
+    private void gameOver() {
+        if(Stats.getPlayerWon()) {
+            background(0);
+            d.drawPlayerWin(this);
+            if (key == ' ') {
+                reset();
             }
         } else {
-            background(0);
-            if(gameStarted) {
-                e.tick();
-            } else {
-                d.drawMainMenu(this);
-                if (key == ' ') {
-                    gameStarted = true;
-                }
+            d.drawAIWin(this);
+            if (key == ' ') {
+                reset();
             }
         }
+    }
 
+    private void starting() {
+        background(0);
+        if(gameStarted) {
+            e.tick();
+        } else {
+            d.drawMainMenu(this);
+            if (key == ' ') {
+                gameStarted = true;
+            }
+        }
+    }
 
+    private void reset() {
+        Stats.setPlayerWon(false);
+        Stats.setAiWon(false);
+        gameStarted = false;
+        e.reset();
+        Stats.reset();
+        setup();
     }
 
 

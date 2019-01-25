@@ -23,6 +23,21 @@ public class Stats {
 
     private static int hqHealth = 2000;
 
+    static void reset() {
+        playerMinionHealth = 100;
+        playerMinionSpeed = 2;
+        playerMinionRange = 50;
+        playerMinionDamage = 100;
+        playerMinionAtkSpeed = 2;
+
+        aiMinionHealth = 100;
+        aiMinionSpeed = 2;
+        aiMinionRange = 50;
+        aiMinionDamage = 100;
+        aiMinionAtkSpeed = 2;
+
+    }
+
     static boolean getPlayerWon() { return playerWon;}
 
     static void setPlayerWon(boolean value) {playerWon = value;}

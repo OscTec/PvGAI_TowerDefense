@@ -13,8 +13,6 @@ class Environment {
     //private PVector mouse;
     private Stopwatch sw = new Stopwatch();
     private int minionSpawnRate = Stats.getMinionSpawnRate();
-    //protected static ArrayList<Hero> heroes = new ArrayList<>();
-    //static ArrayList<Minion> minions = new ArrayList<>();
 
     private static ArrayList<Minion> playerMinions = new ArrayList<>();
     private static ArrayList<Minion> aiMinions = new ArrayList<>();
@@ -43,7 +41,20 @@ class Environment {
         buildMinions();
         buildTowers();
         buildHQ();
+    }
 
+    void reset() {
+        playerProjectiles.clear();
+        aiProjectiles.clear();
+        topLanePoints.clear();
+        midLanePoints.clear();
+        btmLanePoints.clear();
+        playerMinions.clear();
+        aiMinions.clear();
+        playerTowers.clear();
+        aiTowers.clear();
+        playerHQ = null;
+        aiHQ = null;
     }
 
     void tick() {

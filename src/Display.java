@@ -188,7 +188,8 @@ class Display {
         p.pushMatrix();
         p.fill(0, 102, 153);
         p.textSize(48);
-        p.text("Player Wins!", p.width*0.35f, p.height*0.5f - 50);
+        p.text("Player Wins!", p.width*0.4f, p.height*0.5f);
+        p.text("Press Space bar to reset", p.width*0.3f, p.height*0.5f + 30);
         p.popMatrix();
     }
 
@@ -196,7 +197,8 @@ class Display {
         p.pushMatrix();
         p.fill(0, 102, 153);
         p.textSize(48);
-        p.text("AI Wins!", p.width*0.35f, p.height*0.5f - 50);
+        p.text("AI Wins!", p.width*0.4f, p.height*0.5f);
+        p.text("Press Space bar to reset", p.width*0.3f, p.height*0.5f + 30);
         p.popMatrix();
     }
 
