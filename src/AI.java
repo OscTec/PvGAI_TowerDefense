@@ -26,9 +26,11 @@ public class AI {
             }
             if(45 <= r && r < 65 && Stats.getAiMinionRange() + 10 <= 200) {// Minion Range
                 Stats.setAiMinionRange(10);
+                aiPointsUsed++;
             }
             if(65 <= r && r < 75 && Stats.getAiMinionAtkSpeed() + 1 < 10) {//Minion atk speed
                 Stats.setAiMinionAtkSpeed(1);
+                aiPointsUsed++;
             }
         }
     }

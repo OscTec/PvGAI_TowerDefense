@@ -59,6 +59,7 @@ class Environment {
         playerHQ = null;
         aiHQ = null;
         ai = null;
+        sw.reset();
     }
 
     void tick() {
