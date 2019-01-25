@@ -3,6 +3,8 @@ import processing.core.PApplet;
 class StatChange {
 
     PApplet p;
+    private int maxPoints = 25;
+    private int playerPointsUsed = 0;
 
     StatChange(PApplet p) {
         this.p = p;
@@ -48,52 +50,72 @@ class StatChange {
     }
 
     void playerMinionHealthDecrease() {
-        if(Stats.getPlayerMinionHealth() - 10 >= 10)
+        if(Stats.getPlayerMinionHealth() - 10 >= 10 ) {
             Stats.setPlayerMinionHealth(-10);
+            playerPointsUsed--;
+        }
     }
 
     void playerMinionHealthIncrease() {
-        if(Stats.getPlayerMinionHealth() + 10 <= 200)
-        Stats.setPlayerMinionHealth(10);
+        if(Stats.getPlayerMinionHealth() + 10 <= 200 && playerPointsUsed < maxPoints) {
+            Stats.setPlayerMinionHealth(10);
+            playerPointsUsed++;
+        }
     }
 
     void playerMinionDamageDecrease() {
-        if(Stats.getPlayerMinionDamage() - 10 >= 10)
+        if(Stats.getPlayerMinionDamage() - 10 >= 10) {
             Stats.setPlayerMinionDamage(-10);
+            playerPointsUsed--;
+        }
     }
 
     void playerMinionDamageIncrease() {
-        if(Stats.getPlayerMinionDamage() + 10 <= 200)
-        Stats.setPlayerMinionDamage(10);
+        if(Stats.getPlayerMinionDamage() + 10 <= 200 && playerPointsUsed < maxPoints) {
+            Stats.setPlayerMinionDamage(10);
+            playerPointsUsed++;
+        }
     }
 
     void playerMinionSpeedDecrease() {
-        if(Stats.getPlayerMinionSpeed() - 1 >= 1)
-        Stats.setPlayerMinionSpeed(-1);
+        if(Stats.getPlayerMinionSpeed() - 1 >= 1) {
+            Stats.setPlayerMinionSpeed(-1);
+            playerPointsUsed--;
+        }
     }
 
     void playerMinionSpeedIncrease() {
-        if(Stats.getPlayerMinionSpeed() + 1 <= 5)
+        if(Stats.getPlayerMinionSpeed() + 1 <= 5 && playerPointsUsed < maxPoints) {
             Stats.setPlayerMinionSpeed(1);
+            playerPointsUsed++;
+        }
     }
 
     void playerMinionRangeDecrease() {
-        if(Stats.getPlayerMinionRange() - 10 >= 10)
-        Stats.setPlayerMinionRange(-10);
+        if(Stats.getPlayerMinionRange() - 10 >= 10) {
+            Stats.setPlayerMinionRange(-10);
+            playerPointsUsed--;
+        }
     }
 
     void playerMinionRangeIncrease() {
-        if(Stats.getPlayerMinionRange() + 10 <= 200)
+        if(Stats.getPlayerMinionRange() + 10 <= 200 && playerPointsUsed < maxPoints) {
             Stats.setPlayerMinionRange(10);
+            playerPointsUsed++;
+        }
     }
 
     void playerMinionAtkSpeedDecrease() {
-        if(Stats.getPlayerMinionAtkSpeed() - 1 >= 1)
-        Stats.setPlayerMinionAtkSpeed(-1);
+        if(Stats.getPlayerMinionAtkSpeed() - 1 >= 1) {
+            Stats.setPlayerMinionAtkSpeed(-1);
+            playerPointsUsed--;
+        }
     }
 
     void playerMinionAtkSpeedIncrease() {
-        if(Stats.getPlayerMinionAtkSpeed() + 1 <= 10)
+        if(Stats.getPlayerMinionAtkSpeed() + 1 <= 10 && playerPointsUsed < maxPoints) {
             Stats.setPlayerMinionAtkSpeed(1);
+            playerPointsUsed++;
+        }
     }
 }

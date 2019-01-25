@@ -4,17 +4,17 @@ public class Stats {
 
     private static int minionSpawnRate = 5;
 
-    private static int playerMinionHealth = 100;
-    private static int playerMinionSpeed = 2;
-    private static int playerMinionRange = 50;
-    private static int playerMinionDamage = 100;
-    private static float playerMinionAtkSpeed = 2;
+    private static int playerMinionHealth = 10;
+    private static int playerMinionSpeed = 1;
+    private static int playerMinionRange = 10;
+    private static int playerMinionDamage = 10;
+    private static float playerMinionAtkSpeed = 1;
 
-    private static int aiMinionHealth = 100;
-    private static int aiMinionSpeed = 2;
-    private static int aiMinionRange = 50;
-    private static int aiMinionDamage = 100;
-    private static float aiMinionAtkSpeed  = 2;
+    private static int aiMinionHealth = 10;
+    private static int aiMinionSpeed = 1;
+    private static int aiMinionRange = 10;
+    private static int aiMinionDamage = 10;
+    private static float aiMinionAtkSpeed  = 1;
 
     private static int towerHealth = 500;
     private static int towerDamage = 10;
@@ -24,18 +24,17 @@ public class Stats {
     private static int hqHealth = 2000;
 
     static void reset() {
-        playerMinionHealth = 100;
-        playerMinionSpeed = 2;
-        playerMinionRange = 50;
-        playerMinionDamage = 100;
-        playerMinionAtkSpeed = 2;
+        playerMinionHealth = 10;
+        playerMinionSpeed = 1;
+        playerMinionRange = 10;
+        playerMinionDamage = 10;
+        playerMinionAtkSpeed = 1;
 
-        aiMinionHealth = 100;
-        aiMinionSpeed = 2;
-        aiMinionRange = 50;
-        aiMinionDamage = 100;
-        aiMinionAtkSpeed = 2;
-
+        aiMinionHealth = 10;
+        aiMinionSpeed = 1;
+        aiMinionRange = 10;
+        aiMinionDamage = 10;
+        aiMinionAtkSpeed = 1;
     }
 
     static boolean getPlayerWon() { return playerWon;}
