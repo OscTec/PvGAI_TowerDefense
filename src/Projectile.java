@@ -34,9 +34,11 @@ class Projectile {
         velocity.setMag(5);
         position.add(velocity);
         //d.drawProjectile(p, position, theta, currentHealth, maxHealth);
-        d.drawProjectile(p, position);
+        //d.drawProjectile(p, position);
         currentHealth--;
     }
+
+    void drawProjectile(PApplet p) {d.drawProjectile(p, position);}
 
     boolean projectileAlive() {
         if (currentHealth > 0) {

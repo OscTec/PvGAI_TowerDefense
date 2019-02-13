@@ -5,4 +5,6 @@ public class Settings {
     static double maxDistance = Math.sqrt((width*width) + (height*height));
     static boolean chasePoints = true;
     static boolean rangeLines = false;
+    static boolean aiVai = false;
+    static boolean display = true;
 }

@@ -9,6 +9,17 @@ public class Headquarters {
     private Display d = new Display();
     private int currentHealth;
 
+
+    //sim HQ
+    Headquarters(PApplet p, PVector pos, boolean player, int currentHealth) {
+        this.p = p;
+        this.pos = pos;
+        this.player = player;
+        this.currentHealth = currentHealth;
+    }
+
+
+    //Normal hq
     Headquarters(PApplet p, PVector pos, boolean player) {
         this.p = p;
         this.pos = pos;
@@ -18,8 +29,11 @@ public class Headquarters {
 
     void tick(){
         checkDamage();
-        d.drawHQ(p, pos, currentHealth);
+        //System.out.println(currentHealth);
+        //d.drawHQ(p, pos, currentHealth);
     }
+
+    void drawHQ() {d.drawHQ(p, pos, currentHealth);}
 
     private void checkDamage() {
         if (player) {
@@ -51,4 +65,8 @@ public class Headquarters {
     PVector getPos() {
         return pos;
     }
+
+    boolean getPlayer() {return player;}
+
+    int getCurrentHealth() {return currentHealth;}
 }

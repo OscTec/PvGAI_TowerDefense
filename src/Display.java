@@ -1,8 +1,6 @@
 import processing.core.PApplet;
 import processing.core.PVector;
 
-import java.beans.PropertyVetoException;
-
 class Display {
 
     void drawHero(PApplet p, PVector position, float theta, float r) {
@@ -80,23 +78,6 @@ class Display {
 
     }
 
-    void drawTower(PApplet p, PVector pos) {
-        p.rect(pos.x, pos.y, 10, 10);
-    }
-
-    void drawTower(PApplet p, PVector pos, int currentHealth, int maxHealth) {
-        p.rectMode(p.RADIUS);
-        float healthColour = p.map(currentHealth, 0, maxHealth, 0, 1);
-        p.fill(p.lerpColor(p.color(255, 0, 0), p.color(0, 255, 0), healthColour));
-        float m = p.map(currentHealth, 0, maxHealth, 0, 2);
-        p.rect(pos.x, pos.y + 20, 10 * m, 2, 7);
-        p.pushMatrix();
-        p.rectMode(p.CENTER);
-        p.fill(220, 20, 60);
-        p.rect(pos.x, pos.y, 25, 25);
-        p.popMatrix();
-    }
-
     void drawTower(PApplet p, PVector pos, int currentHealth, int maxHealth, int range) {
         p.pushMatrix();
         p.rectMode(p.RADIUS);
@@ -158,19 +139,19 @@ class Display {
     void drawStats(PApplet p) {
         p.pushMatrix();
         p.fill(0, 102, 153);
-        p.textSize(32);
-        p.text("HP: " + Stats.getPlayerMinionHealth(), p.width*0.01f, 30);
-        p.text("DMG: " + Stats.getPlayerMinionDamage(), p.width*0.2f, 30);
-        p.text("SPD: " + Stats.getPlayerMinionSpeed(), p.width*0.4f, 30);
-        p.text("Range: " + Stats.getPlayerMinionRange(), p.width*0.6f, 30);
-        p.text("Atk Rate: " + Stats.getPlayerMinionAtkSpeed(), p.width*0.8f, 30);
+        p.textSize(28);
+        p.text("Q- HP: " + Stats.getPlayerMinionHealth() + " W+", p.width*0.01f, 30);
+        p.text("E- DMG: " + Stats.getPlayerMinionDamage() + " R+", p.width*0.2f, 30);
+        p.text("T- SPD: " + Stats.getPlayerMinionSpeed() + " Y+", p.width*0.4f, 30);
+        p.text("U- Range: " + Stats.getPlayerMinionRange() + " I+", p.width*0.55f, 30);
+        p.text("O- Atk SPD: " + Stats.getPlayerMinionAtkSpeed() + " P+", p.width*0.75f, 30);
 
         p.fill(255, 10, 15);
         p.text("HP: " + Stats.getAiMinionHealth(), p.width*0.01f, p.height - 10);
         p.text("DMG: " + Stats.getAiMinionDamage(), p.width*0.2f, p.height - 10);
         p.text("SPD: " + Stats.getAiMinionSpeed(), p.width*0.4f, p.height - 10);
-        p.text("Range: " + Stats.getAiMinionRange(), p.width*0.6f, p.height - 10);
-        p.text("Atk Rate: " + Stats.getAiMinionAtkSpeed(), p.width*0.8f, p.height - 10);
+        p.text("Range: " + Stats.getAiMinionRange(), p.width*0.55f, p.height - 10);
+        p.text("Atk SPD: " + Stats.getAiMinionAtkSpeed(), p.width*0.75f, p.height - 10);
         p.popMatrix();
     }
 
@@ -202,12 +183,21 @@ class Display {
         p.popMatrix();
     }
 
+    void drawSkillBar(PApplet p) {
+        p.pushMatrix();
+        p.fill(0, 255, 255);
+        float m = p.map(StatChange.getPlayerPointsUsed(), 0, 25, 0, p.width);
+        p.rect(p.width*0.5f, 40, m, 20);
+        p.popMatrix();
+    }
+
 
     void drawProjectile(PApplet p, PVector pos){
         p.ellipse(pos.x, pos.y, 15, 15);
     }
 
     void drawFrameRate(PApplet p) {
+        p.background(0);
         p.pushMatrix();
         p.fill(255, 255, 0);
         p.textSize(20);

@@ -4,7 +4,8 @@ class StatChange {
 
     PApplet p;
     private int maxPoints = 25;
-    private int playerPointsUsed = 0;
+    private static int playerPointsUsed = 0;
+    private Stopwatch sw = new Stopwatch();
 
     StatChange(PApplet p) {
         this.p = p;
@@ -15,7 +16,7 @@ class StatChange {
     }
 
     void keyPressed() {
-        if (p.keyPressed) {
+        if (p.keyPressed && sw.elapsedTime() >= 0.1f) {
             if (p.key == 'q' || p.key == 'Q') {
                 playerMinionHealthDecrease();
             }
@@ -46,6 +47,7 @@ class StatChange {
             if (p.key == 'p' || p.key == 'P') {
                 playerMinionAtkSpeedIncrease();
             }
+            sw.reset();
         }
     }
 
@@ -117,5 +119,13 @@ class StatChange {
             Stats.setPlayerMinionAtkSpeed(1);
             playerPointsUsed++;
         }
+    }
+
+    public static int getPlayerPointsUsed() {
+        return playerPointsUsed;
+    }
+
+    public static void resetPoints() {
+        playerPointsUsed = 0;
     }
 }

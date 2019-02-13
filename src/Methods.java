@@ -54,4 +54,16 @@ public class Methods {
         return null;
 
     }
+
+    public static boolean areAllTrue(ArrayList<Simulation> array)
+    {
+        for(Simulation b : array) if(!b.simFinished()) return false;
+        return true;
+    }
+
+    public static ArrayList<Minion> sortMinions(ArrayList<Minion> minions) {
+
+
+        return minions;
+    }
 }

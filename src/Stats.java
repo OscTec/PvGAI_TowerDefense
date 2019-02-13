@@ -16,8 +16,8 @@ public class Stats {
     private static int aiMinionDamage = 10;
     private static float aiMinionAtkSpeed  = 1;
 
-    private static int towerHealth = 500;
-    private static int towerDamage = 10;
+    private static int towerHealth = 1000;
+    private static int towerDamage = 50;
     private static int towerRange = 100;
     private static float towerAtkSpeed = 2;
 
@@ -31,7 +31,7 @@ public class Stats {
         playerMinionAtkSpeed = 1;
 
         aiMinionHealth = 10;
-        aiMinionSpeed = 1;
+        aiMinionSpeed = 1576;
         aiMinionRange = 10;
         aiMinionDamage = 10;
         aiMinionAtkSpeed = 1;
@@ -85,11 +85,15 @@ public class Stats {
 
     static void setAiMinionHealth(int value) { aiMinionHealth = aiMinionHealth + value; }
 
+    static void setAiMinionHealthValue(int value) { aiMinionHealth = value; }
+
     static int getAiMinionSpeed() {
         return aiMinionSpeed;
     }
 
     static void setAiMinionSpeed(int value) { aiMinionSpeed = aiMinionSpeed + value;}
+
+    static void setAiMinionSpeedValue(int value) { aiMinionSpeed = value;}
 
     static int getAiMinionRange() {
         return aiMinionRange;
@@ -97,17 +101,23 @@ public class Stats {
 
     static void setAiMinionRange(int value) { aiMinionRange = aiMinionRange + value;}
 
+    static void setAiMinionRangeValue(int value) { aiMinionRange = value;}
+
     static int getAiMinionDamage() {
         return aiMinionDamage;
     }
 
     static void setAiMinionDamage(int value) { aiMinionDamage = aiMinionDamage + value;}
 
+    static void setAiMinionDamageValue(int value) { aiMinionDamage = value;}
+
     static float getAiMinionAtkSpeed() {
         return aiMinionAtkSpeed;
     }
 
     static void setAiMinionAtkSpeed(float value) { aiMinionAtkSpeed = aiMinionAtkSpeed + value;}
+
+    static void setAiMinionAtkSpeedValue(float value) { aiMinionAtkSpeed = value;}
 
     static int getTowerHealth() {
         return towerHealth;
