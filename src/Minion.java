@@ -32,6 +32,7 @@ class Minion {
 
     //private ArrayList<Projectile> rightPro;
     private Simulation sim;
+    private float fitness;
     //To make copy
     Minion(PApplet p, int maxHealth, int maxSpeed, int range, int damage, float fireRate){
         this.p = p;
@@ -438,6 +439,8 @@ class Minion {
         }
     }
 
+    
+
     int getHealth() {return maxHealth;}
 
     int getSpeed() {return maxSpeed;}
@@ -447,6 +450,10 @@ class Minion {
     int getDamage() {return damage;}
 
     float getAtkSpeed() {return fireRate;}
+
+    void setFitness(float value) {fitness = value;}
+
+    float getFitness() {return fitness;}
 
 
     PVector getPos() {

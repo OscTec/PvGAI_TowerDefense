@@ -1,5 +1,6 @@
 import processing.core.PApplet;
 import processing.core.PVector;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
@@ -33,14 +34,17 @@ class Environment {
     private static ArrayList<Projectile> playerProjectiles = new ArrayList<>();
     private static ArrayList<Projectile> aiProjectiles = new ArrayList<>();
 
-    private ArrayList<PVector> topLanePoints= new ArrayList<>();
-    private ArrayList<PVector> midLanePoints= new ArrayList<>();
-    private ArrayList<PVector> btmLanePoints= new ArrayList<>();
+    private ArrayList<PVector> topLanePoints = new ArrayList<>();
+    private ArrayList<PVector> midLanePoints = new ArrayList<>();
+    private ArrayList<PVector> btmLanePoints = new ArrayList<>();
 
     private boolean leftAISet = false;
 
     ArrayList<Simulation> sims = new ArrayList<>();
+    int numOfSims = 4;
     Minion bestMinion;
+    ArrayList<Minion> oldGen = new ArrayList<>();
+    ArrayList<Minion> newGen = new ArrayList<>();
 
 
     void setup(PApplet p) {
@@ -79,28 +83,50 @@ class Environment {
 
     void tick() {
         checkPause();
-        if(pause){
-            for(Simulation sim: sims) {
-                if(sim.simFinished()) {
-                    if(bestMinion == null || sim.getBestMinion().getDamageDealt() > bestMinion.getDamageDealt()) {
-                        bestMinion = sim.getBestMinion();
+        if (pause) {
+            if (Methods.areAllTrue(sims)) {
+                for (Simulation sim : sims) {
+                    for (Minion m : sim.getFinihsedMinions()) {
+                        oldGen.add(Methods.copyMinion(p, m));
+                    }
+                }
+                for (Minion m : oldGen) {
+                    if (bestMinion == null || m.getDamageDealt() > bestMinion.getDamageDealt()) {
+                        bestMinion = Methods.copyMinion(p, m);
                         System.out.println(bestMinion.getHealth() + " " + bestMinion.getSpeed() + " " + bestMinion.getRange() + " " + bestMinion.getDamage() + " " + bestMinion.getAtkSpeed());
                     }
                 }
-                if(Methods.areAllTrue(sims)) {
-                    Stats.setAiMinionHealthValue(bestMinion.getHealth());
-                    Stats.setAiMinionSpeedValue(bestMinion.getSpeed());
-                    Stats.setAiMinionRangeValue(bestMinion.getRange());
-                    Stats.setAiMinionDamageValue(bestMinion.getDamage());
-                    Stats.setAiMinionAtkSpeedValue(bestMinion.getAtkSpeed());
-                    unpause();
-                } else {
+                Stats.setAiMinionHealthValue(bestMinion.getHealth());
+                Stats.setAiMinionSpeedValue(bestMinion.getSpeed());
+                Stats.setAiMinionRangeValue(bestMinion.getRange());
+                Stats.setAiMinionDamageValue(bestMinion.getDamage());
+                Stats.setAiMinionAtkSpeedValue(bestMinion.getAtkSpeed());
+                ArrayList<Minion> midGen;
+
+                midGen = Methods.buildScoredMinions(oldGen);
+                for (int counter = 0; counter <= (numOfSims * 3); counter++) {
+                    float x = p.random(midGen.size());
+                    float y = p.random(midGen.size());
+                    newGen.add(Methods.breedMinions(p, midGen.get((int) x), midGen.get((int) y)));
+                }
+                oldGen.clear();
+                midGen.clear();
+                unpause();
+            } else {
+                for (Simulation sim : sims) {
                     sim.tick();
                 }
-
             }
+//            if (Methods.areAllTrue(sims)) {
+//                Stats.setAiMinionHealthValue(bestMinion.getHealth());
+//                Stats.setAiMinionSpeedValue(bestMinion.getSpeed());
+//                Stats.setAiMinionRangeValue(bestMinion.getRange());
+//                Stats.setAiMinionDamageValue(bestMinion.getDamage());
+//                Stats.setAiMinionAtkSpeedValue(bestMinion.getAtkSpeed());
+//                unpause();
+//            }
         }
-        if(!pause) {
+        if (!pause) {
 
 
             if (!Settings.aiVai) {
@@ -202,10 +228,10 @@ class Environment {
                 }
                 t.tick();
             }
-            if(playerMinions.isEmpty()) {
+            if (playerMinions.isEmpty()) {
                 leftMinionsDead = true;
             }
-            if(aiMinions.isEmpty()) {
+            if (aiMinions.isEmpty()) {
                 rightMinionsDead = true;
             }
 
@@ -242,15 +268,7 @@ class Environment {
 
     void buildSimulation() {
 
-        for (int counter = 0; counter <= 4 ; counter++) {
-//            ArrayList<Tower> leftTowers = new ArrayList<>();
-//            ArrayList<Tower> rightTowers = new ArrayList<>();
-//            for (Tower t: playerTowers) {
-//                leftTowers.add(copyTower(p, t.getPos(), t.getCurrentHealth(), t.getPlayer()));
-//            }
-//            for (Tower t: aiTowers) {
-//                rightTowers.add(copyTower(p, t.getPos(), t.getCurrentHealth(), t.getPlayer()));
-//            }
+        for (int counter = 0; counter <= numOfSims; counter++) {
             Headquarters leftHQ = copyHQ(p, playerHQ.getPos(), playerHQ.getCurrentHealth(), playerHQ.getPlayer());
             Headquarters rightHQ = copyHQ(p, aiHQ.getPos(), aiHQ.getCurrentHealth(), aiHQ.getPlayer());
             sims.add(new Simulation(p, playerTowers, aiTowers, leftHQ, rightHQ, topLanePoints, midLanePoints, btmLanePoints));
@@ -259,8 +277,8 @@ class Environment {
     }
 
     void checkPause() {
-        if(p.keyPressed && pauseSW.elapsedTime() >= 0.2f) {
-            if(p.key == 'l' || p.key == 'L') {
+        if (p.keyPressed && pauseSW.elapsedTime() >= 0.2f) {
+            if (p.key == 'l' || p.key == 'L') {
                 if (pause) {
                     pause = false;
                 } else {
@@ -273,7 +291,7 @@ class Environment {
     }
 
     private void setLeftAI() {
-        if(Settings.aiVai && !leftAISet) {
+        if (Settings.aiVai && !leftAISet) {
             leftAI = new otherAI(p);
             leftAI.assignPoints();
             leftAISet = true;
@@ -289,14 +307,14 @@ class Environment {
 
     private void buildMinions() {
         //Spawn player minions
-        playerMinions.add(new Minion(p, new PVector(100, p.height/2f), topLanePoints, true));
-        playerMinions.add(new Minion(p, new PVector(100, p.height/2f), midLanePoints, true));
-        playerMinions.add(new Minion(p, new PVector(100, p.height/2f), btmLanePoints, true));
+        playerMinions.add(new Minion(p, new PVector(100, p.height / 2f), topLanePoints, true));
+        playerMinions.add(new Minion(p, new PVector(100, p.height / 2f), midLanePoints, true));
+        playerMinions.add(new Minion(p, new PVector(100, p.height / 2f), btmLanePoints, true));
         leftMinionsDead = false;
         //Spawn AI minions
-        aiMinions.add(new Minion(p, new PVector(p.width - 130, p.height/2f), topLanePoints, false));
-        aiMinions.add(new Minion(p, new PVector(p.width - 100, p.height/2f), midLanePoints, false));
-        aiMinions.add(new Minion(p, new PVector(p.width - 130, p.height/2f), btmLanePoints, false));
+        aiMinions.add(new Minion(p, new PVector(p.width - 130, p.height / 2f), topLanePoints, false));
+        aiMinions.add(new Minion(p, new PVector(p.width - 100, p.height / 2f), midLanePoints, false));
+        aiMinions.add(new Minion(p, new PVector(p.width - 130, p.height / 2f), btmLanePoints, false));
         rightMinionsDead = false;
     }
 
@@ -306,53 +324,53 @@ class Environment {
         //aiTowers.add(new Tower(p, new PVector(p.width*0.5f, p.height*0.5f), 10,10,70,1f));
         //aiTowers.add(new Tower(p, new PVector(p.width*0.5f, p.height*0.9f), 10,10,70,1f));
 
-        playerTowers.add(new Tower(p, new PVector(p.width*0.1f, p.height*0.15f), true));
-        playerTowers.add(new Tower(p, new PVector(p.width*0.3f, p.height*0.15f), true));
-        playerTowers.add(new Tower(p, new PVector(p.width*0.2f, p.height*0.5f), true));
-        playerTowers.add(new Tower(p, new PVector(p.width*0.4f, p.height*0.5f), true));
-        playerTowers.add(new Tower(p, new PVector(p.width*0.1f, p.height*0.85f), true));
-        playerTowers.add(new Tower(p, new PVector(p.width*0.3f, p.height*0.85f), true));
+        playerTowers.add(new Tower(p, new PVector(p.width * 0.1f, p.height * 0.15f), true));
+        playerTowers.add(new Tower(p, new PVector(p.width * 0.3f, p.height * 0.15f), true));
+        playerTowers.add(new Tower(p, new PVector(p.width * 0.2f, p.height * 0.5f), true));
+        playerTowers.add(new Tower(p, new PVector(p.width * 0.4f, p.height * 0.5f), true));
+        playerTowers.add(new Tower(p, new PVector(p.width * 0.1f, p.height * 0.85f), true));
+        playerTowers.add(new Tower(p, new PVector(p.width * 0.3f, p.height * 0.85f), true));
 
-        aiTowers.add(new Tower(p, new PVector(p.width*0.9f, p.height*0.15f), false));
-        aiTowers.add(new Tower(p, new PVector(p.width*0.7f, p.height*0.15f), false));
-        aiTowers.add(new Tower(p, new PVector(p.width*0.8f, p.height*0.5f), false));
-        aiTowers.add(new Tower(p, new PVector(p.width*0.6f, p.height*0.5f), false));
-        aiTowers.add(new Tower(p, new PVector(p.width*0.9f, p.height*0.85f), false));
-        aiTowers.add(new Tower(p, new PVector(p.width*0.7f, p.height*0.85f), false));
+        aiTowers.add(new Tower(p, new PVector(p.width * 0.9f, p.height * 0.15f), false));
+        aiTowers.add(new Tower(p, new PVector(p.width * 0.7f, p.height * 0.15f), false));
+        aiTowers.add(new Tower(p, new PVector(p.width * 0.8f, p.height * 0.5f), false));
+        aiTowers.add(new Tower(p, new PVector(p.width * 0.6f, p.height * 0.5f), false));
+        aiTowers.add(new Tower(p, new PVector(p.width * 0.9f, p.height * 0.85f), false));
+        aiTowers.add(new Tower(p, new PVector(p.width * 0.7f, p.height * 0.85f), false));
 
     }
 
     private void buildHQ() {
-        playerHQ = new Headquarters(p, new PVector(p.width*0.1f, p.height*0.5f), true);
-        aiHQ = new Headquarters(p, new PVector(p.width*0.9f, p.height*0.5f), false);
+        playerHQ = new Headquarters(p, new PVector(p.width * 0.1f, p.height * 0.5f), true);
+        aiHQ = new Headquarters(p, new PVector(p.width * 0.9f, p.height * 0.5f), false);
     }
 
     private void buildTopLane() {
-        topLanePoints.add(new PVector(p.width*0.1f, p.height*0.5f - 10));
-        topLanePoints.add(new PVector(p.width*0.1f, p.height*0.15f));
-        topLanePoints.add(new PVector(p.width*0.25f, p.height*0.15f));
-        topLanePoints.add(new PVector(p.width*0.5f, p.height*0.15f));
-        topLanePoints.add(new PVector(p.width*0.75f, p.height*0.15f));
-        topLanePoints.add(new PVector(p.width*0.9f, p.height*0.15f));
-        topLanePoints.add(new PVector(p.width*0.9f, p.height*0.5f - 10));
+        topLanePoints.add(new PVector(p.width * 0.1f, p.height * 0.5f - 10));
+        topLanePoints.add(new PVector(p.width * 0.1f, p.height * 0.15f));
+        topLanePoints.add(new PVector(p.width * 0.25f, p.height * 0.15f));
+        topLanePoints.add(new PVector(p.width * 0.5f, p.height * 0.15f));
+        topLanePoints.add(new PVector(p.width * 0.75f, p.height * 0.15f));
+        topLanePoints.add(new PVector(p.width * 0.9f, p.height * 0.15f));
+        topLanePoints.add(new PVector(p.width * 0.9f, p.height * 0.5f - 10));
     }
 
     private void buildMidLane() {
-        midLanePoints.add(new PVector(p.width*0.1f, p.height*0.5f));
-        midLanePoints.add(new PVector(p.width*0.25f, p.height*0.5f));
-        midLanePoints.add(new PVector(p.width*0.5f, p.height*0.5f));
-        midLanePoints.add(new PVector(p.width*0.75f, p.height*0.5f));
-        midLanePoints.add(new PVector(p.width*0.9f, p.height*0.5f));
+        midLanePoints.add(new PVector(p.width * 0.1f, p.height * 0.5f));
+        midLanePoints.add(new PVector(p.width * 0.25f, p.height * 0.5f));
+        midLanePoints.add(new PVector(p.width * 0.5f, p.height * 0.5f));
+        midLanePoints.add(new PVector(p.width * 0.75f, p.height * 0.5f));
+        midLanePoints.add(new PVector(p.width * 0.9f, p.height * 0.5f));
     }
 
     private void buildBtmLane() {
-        btmLanePoints.add(new PVector(p.width*0.1f, p.height*0.5f + 10));
-        btmLanePoints.add(new PVector(p.width*0.1f, p.height*0.85f));
-        btmLanePoints.add(new PVector(p.width*0.25f, p.height*0.85f));
-        btmLanePoints.add(new PVector(p.width*0.5f, p.height*0.85f));
-        btmLanePoints.add(new PVector(p.width*0.75f, p.height*0.85f));
-        btmLanePoints.add(new PVector(p.width*0.9f, p.height*0.85f));
-        btmLanePoints.add(new PVector(p.width*0.9f, p.height*0.5f + 10));
+        btmLanePoints.add(new PVector(p.width * 0.1f, p.height * 0.5f + 10));
+        btmLanePoints.add(new PVector(p.width * 0.1f, p.height * 0.85f));
+        btmLanePoints.add(new PVector(p.width * 0.25f, p.height * 0.85f));
+        btmLanePoints.add(new PVector(p.width * 0.5f, p.height * 0.85f));
+        btmLanePoints.add(new PVector(p.width * 0.75f, p.height * 0.85f));
+        btmLanePoints.add(new PVector(p.width * 0.9f, p.height * 0.85f));
+        btmLanePoints.add(new PVector(p.width * 0.9f, p.height * 0.5f + 10));
     }
 
 //    private void mouse() {
@@ -386,21 +404,37 @@ class Environment {
         return new Headquarters(p, bPos, bPlayer, bHealth);
     }
 
-    static ArrayList<Minion> getPlayerMinions() {return playerMinions;}
+    static ArrayList<Minion> getPlayerMinions() {
+        return playerMinions;
+    }
 
-    static ArrayList<Minion> getAiMinions() {return aiMinions;}
+    static ArrayList<Minion> getAiMinions() {
+        return aiMinions;
+    }
 
-    static  ArrayList<Projectile> getPlayerProjectiles() {return playerProjectiles;}
+    static ArrayList<Projectile> getPlayerProjectiles() {
+        return playerProjectiles;
+    }
 
-    static ArrayList<Projectile> getAiProjectiles() {return  aiProjectiles;}
+    static ArrayList<Projectile> getAiProjectiles() {
+        return aiProjectiles;
+    }
 
-    static ArrayList<Tower> getPlayerTowers() {return playerTowers;}
+    static ArrayList<Tower> getPlayerTowers() {
+        return playerTowers;
+    }
 
-    static ArrayList<Tower> getAiTowers() {return aiTowers;}
+    static ArrayList<Tower> getAiTowers() {
+        return aiTowers;
+    }
 
-    static Headquarters getPlayerHQ() {return playerHQ;}
+    static Headquarters getPlayerHQ() {
+        return playerHQ;
+    }
 
-    static Headquarters getAiHQ() {return aiHQ;}
+    static Headquarters getAiHQ() {
+        return aiHQ;
+    }
 
     private static Object deepClone(Object object) {
         try {

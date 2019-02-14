@@ -1,5 +1,10 @@
+import processing.core.PApplet;
 import processing.core.PVector;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 public class Methods {
@@ -66,4 +71,81 @@ public class Methods {
 
         return minions;
     }
+
+    public static ArrayList<Minion> buildScoredMinions(ArrayList<Minion> minList) {
+        int scoreTotal = 0;
+        ArrayList<Minion> sortedMinions = new ArrayList<>();
+        for (Minion m: minList) {
+            scoreTotal += m.getDamageDealt();
+        }
+        for (Minion m: minList) {
+            m.setFitness((m.getDamageDealt()/scoreTotal)*100);
+        }
+        for (Minion m: minList) {
+            for(int x = 0; x <= m.getFitness(); x++) {
+                sortedMinions.add(m);
+            }
+        }
+        return sortedMinions;
+    }
+
+    public static Minion breedMinions(PApplet p, Minion m1, Minion m2) {
+        int newHealth = ((int) deepClone(m1.getHealth()) + (int) deepClone(m2.getHealth())) / 2;
+        int newSpeed = ((int) deepClone(m1.getSpeed()) + (int) deepClone(m2.getSpeed())) / 2;
+        int newRange = ((int) deepClone(m1.getRange()) + (int) deepClone(m2.getRange())) / 2;
+        int newDamage = ((int) deepClone(m1.getDamage()) + (int) deepClone(m2.getDamage())) / 2;
+        float newAtkSpeed = ((float) deepClone(m1.getAtkSpeed()) + (float) deepClone(m2.getAtkSpeed())) / 2;
+
+
+        Minion offSpring = new Minion(p, newHealth, newSpeed, newRange, newDamage, newAtkSpeed);
+        return offSpring;
+    }
+
+    static ArrayList<Minion> mutateMinions(ArrayList<Minion> minList, int mutLevel) {
+
+        return minList;
+    }
+
+    private static Object deepClone(Object object) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(object);
+            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            return ois.readObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Minion copyMinion(PApplet p, Minion m){
+        int bMaxHealth = (int) deepClone(m.getHealth());
+        int bMaxSpeed = (int) deepClone(m.getSpeed());
+        int bRange = (int) deepClone(m.getRange());
+        int bDamage = (int) deepClone(m.getDamage());
+        float bFireRate = (float) deepClone(m.getAtkSpeed());
+        int bDamageDealt = (int) deepClone(m.getDamageDealt());
+
+        return new Minion(p, bMaxHealth, bMaxSpeed, bRange, bDamage, bFireRate, bDamageDealt);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

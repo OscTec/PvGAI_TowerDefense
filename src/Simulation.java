@@ -31,6 +31,7 @@ public class Simulation {
     private boolean finished = false;
 
     private Minion bestMinion;
+    private ArrayList<Minion> finishedMinions = new ArrayList<>();
 
     Simulation(PApplet p, ArrayList<Tower> leftTowers, ArrayList<Tower> rightTowers, Headquarters leftHQ, Headquarters rightHQ, ArrayList<PVector> topLane, ArrayList<PVector> midLane, ArrayList<PVector> btmLane) {
         this.p = p;
@@ -108,8 +109,9 @@ public class Simulation {
         for (Minion m : rightMinions) {
 
             if (m.checkDead()) {
-                bestMinion = copyMinion(p, m.getHealth(), m.getSpeed(), m.getRange(), m.getDamage(), m.getAtkSpeed(), m.getDamageDealt());
-                System.out.println("Right minion dead");
+                finishedMinions.add(copyMinion(p, m.getHealth(), m.getSpeed(), m.getRange(), m.getDamage(), m.getAtkSpeed(), m.getDamageDealt()));
+                //bestMinion = copyMinion(p, m.getHealth(), m.getSpeed(), m.getRange(), m.getDamage(), m.getAtkSpeed(), m.getDamageDealt());
+                //System.out.println("Right minion dead");
 //                if (ai.testMinion(m)) {
 //                    int health = (int) deepClone(m.getHealth());
 //                    int speed = (int) deepClone(m.getSpeed());
@@ -188,6 +190,10 @@ public class Simulation {
             e.printStackTrace();
             return null;
         }
+    }
+
+    ArrayList<Minion> getFinihsedMinions() {
+        return finishedMinions;
     }
 
     Tower copyTower(PApplet p, PVector pos, int currentHealth, boolean player) {
