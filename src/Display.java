@@ -85,11 +85,12 @@ class Display {
         p.fill(p.lerpColor(p.color(255, 0, 0), p.color(0, 255, 0), healthColour));
         float m = p.map(currentHealth, 0, maxHealth, 0, 2);
         p.rect(pos.x, pos.y + 20, 10 * m, 2, 7);
-        p.pushMatrix();
+//        p.pushMatrix();
         p.rectMode(p.CENTER);
         p.fill(220, 20, 60);
         p.rect(pos.x, pos.y, 25, 25);
         p.popMatrix();
+        p.pushMatrix();
         if(Settings.rangeLines) {
             p.pushMatrix();
             p.noFill();

@@ -26,23 +26,23 @@ public class Simulation {
     ArrayList<Projectile> leftProjectiles = new ArrayList<>();
     ArrayList<Projectile> rightProjectiles = new ArrayList<>();
 
+    private boolean makeMinions = true;
     private boolean leftMinionsDead = false;
     private boolean rightMinionsDead = false;
     private boolean finished = false;
+
 
     private Minion bestMinion;
     private ArrayList<Minion> finishedMinions = new ArrayList<>();
 
     Simulation(PApplet p, ArrayList<Tower> leftTowers, ArrayList<Tower> rightTowers, Headquarters leftHQ, Headquarters rightHQ, ArrayList<PVector> topLane, ArrayList<PVector> midLane, ArrayList<PVector> btmLane) {
         this.p = p;
-
-        for (Tower t: leftTowers) {
+        for (Tower t : leftTowers) {
             this.leftTowers.add(copyTower(p, t.getPos(), t.getCurrentHealth(), t.getPlayer()));
         }
-        for (Tower t: rightTowers) {
+        for (Tower t : rightTowers) {
             this.rightTowers.add(copyTower(p, t.getPos(), t.getCurrentHealth(), t.getPlayer()));
         }
-
         //this.leftTowers = leftTower;
         this.leftHQ = leftHQ;
 
@@ -55,8 +55,30 @@ public class Simulation {
         buildMinions();
     }
 
+    Simulation(PApplet p, ArrayList<Tower> leftTowers, ArrayList<Tower> rightTowers, Headquarters leftHQ, Headquarters rightHQ, ArrayList<PVector> topLane, ArrayList<PVector> midLane, ArrayList<PVector> btmLane, Minion m1, Minion m2, Minion m3) {
+        this.p = p;
+        for (Tower t : leftTowers) {
+            this.leftTowers.add(copyTower(p, t.getPos(), t.getCurrentHealth(), t.getPlayer()));
+        }
+        for (Tower t : rightTowers) {
+            this.rightTowers.add(copyTower(p, t.getPos(), t.getCurrentHealth(), t.getPlayer()));
+        }
+        //this.leftTowers = leftTower;
+        this.leftHQ = leftHQ;
+
+        //this.rightTowers = rightTower;
+        this.rightHQ = rightHQ;
+
+        this.topLane = topLane;
+        this.midLane = midLane;
+        this.btmLane = btmLane;
+        makeMinions = false;
+        buildMinions(m1, m2, m3);
+
+    }
+
     void tick() {
-        d.drawLanes(p);
+        //d.drawLanes(p);
         for (Projectile pro : leftProjectiles) {
             if (!pro.projectileAlive()) {
                 leftProjectiles.remove(pro);
@@ -90,10 +112,10 @@ public class Simulation {
             }
             t.tick();
         }
-        if(leftMinions.isEmpty()) {
+        if (leftMinions.isEmpty()) {
             leftMinionsDead = true;
         }
-        if(rightMinions.isEmpty()) {
+        if (rightMinions.isEmpty()) {
             rightMinionsDead = true;
         }
 
@@ -128,7 +150,7 @@ public class Simulation {
             //System.out.println(m.getPos());
             m.tick(p);
         }
-        if(leftMinionsDead && rightMinionsDead) {
+        if (leftMinionsDead && rightMinionsDead) {
             //Environment.unpause();
             leftMinionsDead = true;
             rightMinionsDead = true;
@@ -138,23 +160,27 @@ public class Simulation {
     }
 
     void buildMinions() {
+        rightMinions.add(new Minion(p, new PVector(p.width - 130, p.height / 2f), topLane, this, false));
+        rightMinions.add(new Minion(p, new PVector(p.width - 130, p.height / 2f), midLane, this, false));
+        rightMinions.add(new Minion(p, new PVector(p.width - 130, p.height / 2f), btmLane, this, false));
 
+        leftMinions.add(new Minion(p, new PVector(100, p.height / 2f), topLane, this, true));
+        leftMinions.add(new Minion(p, new PVector(100, p.height / 2f), midLane, this, true));
+        leftMinions.add(new Minion(p, new PVector(100, p.height / 2f), btmLane, this, true));
+    }
 
-        //rightMinions.add(new Minion(p, new PVector(p.width - 130, p.height/2f), topLane, this, 10, 1, 10, 10, 1));
-        //rightMinions.add(new Minion(p, new PVector(p.width - 130, p.height/2f), midLane, this, 10, 1, 10, 10, 1));
-        //rightMinions.add(new Minion(p, new PVector(p.width - 130, p.height/2f), btmLane, this, 10, 1, 10, 10, 1));
+    void buildMinions(Minion m1, Minion m2, Minion m3) {
+        rightMinions.add(new Minion(p, new PVector(p.width - 130, p.height / 2f), topLane, this, false, m1.getHealth(), m1.getSpeed(), m1.getAtkSpeed(), m1.getRange(), m1.getDamage()));
+        rightMinions.add(new Minion(p, new PVector(p.width - 130, p.height / 2f), midLane, this, false, m2.getHealth(), m2.getSpeed(), m2.getAtkSpeed(), m2.getRange(), m2.getDamage()));
+        rightMinions.add(new Minion(p, new PVector(p.width - 130, p.height / 2f), btmLane, this, false, m3.getHealth(), m3.getSpeed(), m3.getAtkSpeed(), m3.getRange(), m3.getDamage()));
 
-        rightMinions.add(new Minion(p, new PVector(p.width - 130, p.height/2f), topLane, this, false));
-        rightMinions.add(new Minion(p, new PVector(p.width - 130, p.height/2f), midLane, this, false));
-        rightMinions.add(new Minion(p, new PVector(p.width - 130, p.height/2f), btmLane, this, false));
-
-        leftMinions.add(new Minion(p, new PVector(100, p.height/2f), topLane, this, true));
-        leftMinions.add(new Minion(p, new PVector(100, p.height/2f), midLane, this, true));
-        leftMinions.add(new Minion(p, new PVector(100, p.height/2f), btmLane, this, true));
+        leftMinions.add(new Minion(p, new PVector(100, p.height / 2f), topLane, this, true));
+        leftMinions.add(new Minion(p, new PVector(100, p.height / 2f), midLane, this, true));
+        leftMinions.add(new Minion(p, new PVector(100, p.height / 2f), btmLane, this, true));
     }
 
     boolean simFinished() {
-        if(leftMinionsDead && rightMinionsDead) {
+        if (leftMinionsDead && rightMinionsDead) {
             return true;
         } else {
             return false;
@@ -175,7 +201,7 @@ public class Simulation {
     }
 
     Minion getBestMinion() {
-        return  bestMinion;
+        return bestMinion;
     }
 
     private Object deepClone(Object object) {
@@ -203,7 +229,7 @@ public class Simulation {
         return new Tower(p, this, bPos, bPlayer, bHealth);
     }
 
-    Minion copyMinion(PApplet p, int maxHealth, int maxSpeed, int range, int damage,float fireRate, int damageDealt){
+    Minion copyMinion(PApplet p, int maxHealth, int maxSpeed, int range, int damage, float fireRate, int damageDealt) {
         int bMaxHealth = (int) deepClone(maxHealth);
         int bMaxSpeed = (int) deepClone(maxSpeed);
         int bRange = (int) deepClone(range);

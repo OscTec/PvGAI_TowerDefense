@@ -38,6 +38,8 @@ class Environment {
     private ArrayList<PVector> midLanePoints = new ArrayList<>();
     private ArrayList<PVector> btmLanePoints = new ArrayList<>();
 
+    GeneticAlgorithm g1;
+
     private boolean leftAISet = false;
 
     ArrayList<Simulation> sims = new ArrayList<>();
@@ -84,47 +86,13 @@ class Environment {
     void tick() {
         checkPause();
         if (pause) {
-            if (Methods.areAllTrue(sims)) {
-                for (Simulation sim : sims) {
-                    for (Minion m : sim.getFinihsedMinions()) {
-                        oldGen.add(Methods.copyMinion(p, m));
-                    }
-                }
-                for (Minion m : oldGen) {
-                    if (bestMinion == null || m.getDamageDealt() > bestMinion.getDamageDealt()) {
-                        bestMinion = Methods.copyMinion(p, m);
-                        System.out.println(bestMinion.getHealth() + " " + bestMinion.getSpeed() + " " + bestMinion.getRange() + " " + bestMinion.getDamage() + " " + bestMinion.getAtkSpeed());
-                    }
-                }
-                Stats.setAiMinionHealthValue(bestMinion.getHealth());
-                Stats.setAiMinionSpeedValue(bestMinion.getSpeed());
-                Stats.setAiMinionRangeValue(bestMinion.getRange());
-                Stats.setAiMinionDamageValue(bestMinion.getDamage());
-                Stats.setAiMinionAtkSpeedValue(bestMinion.getAtkSpeed());
-                ArrayList<Minion> midGen;
-
-                midGen = Methods.buildScoredMinions(oldGen);
-                for (int counter = 0; counter <= (numOfSims * 3); counter++) {
-                    float x = p.random(midGen.size());
-                    float y = p.random(midGen.size());
-                    newGen.add(Methods.breedMinions(p, midGen.get((int) x), midGen.get((int) y)));
-                }
-                oldGen.clear();
-                midGen.clear();
-                unpause();
-            } else {
-                for (Simulation sim : sims) {
-                    sim.tick();
-                }
+            if(g1 == null) {
+                g1 = new GeneticAlgorithm(p, topLanePoints, midLanePoints, btmLanePoints, playerHQ, aiHQ, playerTowers, aiTowers);
+                g1.start();
             }
-//            if (Methods.areAllTrue(sims)) {
-//                Stats.setAiMinionHealthValue(bestMinion.getHealth());
-//                Stats.setAiMinionSpeedValue(bestMinion.getSpeed());
-//                Stats.setAiMinionRangeValue(bestMinion.getRange());
-//                Stats.setAiMinionDamageValue(bestMinion.getDamage());
-//                Stats.setAiMinionAtkSpeedValue(bestMinion.getAtkSpeed());
-//                unpause();
-//            }
+
+
+            //runSims();
         }
         if (!pause) {
 
@@ -266,12 +234,58 @@ class Environment {
 
     }
 
-    void buildSimulation() {
+    void runSims() {
+        if (Methods.areAllTrue(sims)) {
+            for (Simulation sim : sims) {
+                for (Minion m : sim.getFinihsedMinions()) {
+                    oldGen.add(Methods.copyMinion(p, m));
+                }
+            }
+            for (Minion m : oldGen) {
+                if (bestMinion == null || m.getDamageDealt() > bestMinion.getDamageDealt()) {
+                    bestMinion = Methods.copyMinion(p, m);
+                    System.out.println(bestMinion.getHealth() + " " + bestMinion.getSpeed() + " " + bestMinion.getRange() + " " + bestMinion.getDamage() + " " + bestMinion.getAtkSpeed());
+                }
+            }
+            Stats.setAiMinionHealthValue(bestMinion.getHealth());
+            Stats.setAiMinionSpeedValue(bestMinion.getSpeed());
+            Stats.setAiMinionRangeValue(bestMinion.getRange());
+            Stats.setAiMinionDamageValue(bestMinion.getDamage());
+            Stats.setAiMinionAtkSpeedValue(bestMinion.getAtkSpeed());
+            ArrayList<Minion> midGen;
 
-        for (int counter = 0; counter <= numOfSims; counter++) {
-            Headquarters leftHQ = copyHQ(p, playerHQ.getPos(), playerHQ.getCurrentHealth(), playerHQ.getPlayer());
-            Headquarters rightHQ = copyHQ(p, aiHQ.getPos(), aiHQ.getCurrentHealth(), aiHQ.getPlayer());
-            sims.add(new Simulation(p, playerTowers, aiTowers, leftHQ, rightHQ, topLanePoints, midLanePoints, btmLanePoints));
+            midGen = Methods.buildScoredMinions(oldGen);
+            for (int counter = 0; counter <= (numOfSims * 3); counter++) {
+                float x = p.random(midGen.size());
+                float y = p.random(midGen.size());
+                newGen.add(Methods.breedMinions(p, midGen.get((int) x), midGen.get((int) y)));
+            }
+            Methods.mutateMinions(p, newGen, 5);
+            oldGen.clear();
+            midGen.clear();
+            oldGen = Methods.copyMinions(p, newGen);
+            newGen.clear();
+            unpause();
+        } else {
+            for (Simulation sim : sims) {
+                sim.tick();
+            }
+        }
+    }
+
+    void buildSimulation() {
+        if(oldGen.isEmpty()) {
+            for (int counter = 0; counter <= numOfSims; counter++) {
+                Headquarters leftHQ = copyHQ(p, playerHQ.getPos(), playerHQ.getCurrentHealth(), playerHQ.getPlayer());
+                Headquarters rightHQ = copyHQ(p, aiHQ.getPos(), aiHQ.getCurrentHealth(), aiHQ.getPlayer());
+                sims.add(new Simulation(p, playerTowers, aiTowers, leftHQ, rightHQ, topLanePoints, midLanePoints, btmLanePoints));
+            }
+        } else {
+            for (int counter = 0; counter <= oldGen.size(); counter = counter + 3) {
+                Headquarters leftHQ = copyHQ(p, playerHQ.getPos(), playerHQ.getCurrentHealth(), playerHQ.getPlayer());
+                Headquarters rightHQ = copyHQ(p, aiHQ.getPos(), aiHQ.getCurrentHealth(), aiHQ.getPlayer());
+                sims.add(new Simulation(p, playerTowers, aiTowers, leftHQ, rightHQ, topLanePoints, midLanePoints, btmLanePoints, oldGen.get(counter), oldGen.get(counter+1), oldGen.get(counter+2)));
+            }
         }
 
     }

@@ -53,28 +53,28 @@ class Minion {
         this.damageDealt = damageDealt;
     }
     //right side minions
-    Minion(PApplet p, PVector pos ,ArrayList<PVector> points, Simulation sim, int maxHealth, int maxSpeed, int range, int damage, float fireRate){
-        this.p = p;
-        this.wayPoints = points;
-        this.pos = pos;
-        this.maxHealth = maxHealth;
-        this.maxSpeed = maxSpeed;
-        this.range = range;
-        this.damage = damage;
-        this.fireRate = fireRate;
-        //this.leftPro = sim.leftProjectiles;
-        //this.rightPro = sim.rightProjectiles;
-        waypointIndex = points.size()-1;
-        player = false;
-        acceleration = new PVector(0, 0);
-        velocity = new PVector(0, 0);
-        r = 6;
-        maxForce = 1f;
-        thisSimulation = true;
-        this.sim = sim;
-        currentHealth = maxHealth;
-        System.out.println(currentHealth);
-    }
+//    Minion(PApplet p, PVector pos ,ArrayList<PVector> points, Simulation sim, int maxHealth, int maxSpeed, int range, int damage, float fireRate){
+//        this.p = p;
+//        this.wayPoints = points;
+//        this.pos = pos;
+//        this.maxHealth = maxHealth;
+//        this.maxSpeed = maxSpeed;
+//        this.range = range;
+//        this.damage = damage;
+//        this.fireRate = fireRate;
+//        //this.leftPro = sim.leftProjectiles;
+//        //this.rightPro = sim.rightProjectiles;
+//        waypointIndex = points.size()-1;
+//        player = false;
+//        acceleration = new PVector(0, 0);
+//        velocity = new PVector(0, 0);
+//        r = 6;
+//        maxForce = 1f;
+//        thisSimulation = true;
+//        this.sim = sim;
+//        currentHealth = maxHealth;
+//        System.out.println(currentHealth);
+//    }
 
     Minion(PApplet p, PVector pos, ArrayList points, Simulation sim, boolean player) {
         this.p = p;
@@ -96,12 +96,45 @@ class Minion {
         }
         if(!player) {
 
-            maxHealth = 0;
+            //maxHealth = 0;
             maxSpeed = 1;
             fireRate = 1;
             damage = 10;
             maxHealth = 10;
+            range = 10;
             assignPoints();
+            waypointIndex = points.size()-1;
+        }
+        currentHealth = maxHealth;
+    }
+
+    Minion(PApplet p, PVector pos, ArrayList points, Simulation sim, boolean player, int health, int speed, float fireRate, int range, int damage) {
+        this.p = p;
+        this.wayPoints = points;
+        this.player = player;
+        acceleration = new PVector(0, 0);
+        velocity = new PVector(0, 0);
+        this.pos = pos;
+        r = 6;
+        maxForce = 1f;
+        this.sim = sim;
+        thisSimulation = true;
+        if(player) {
+            this.maxHealth = Stats.getPlayerMinionHealth();
+            this.maxSpeed = Stats.getPlayerMinionSpeed();
+            this.range = Stats.getPlayerMinionRange();
+            this.damage = Stats.getPlayerMinionDamage();
+            this.fireRate = Stats.getPlayerMinionAtkSpeed();
+        }
+        if(!player) {
+
+            //maxHealth = health;
+            this.maxSpeed = speed;
+            this.fireRate = fireRate;
+            this.damage = damage;
+            this.maxHealth = health;
+            this.range = range;
+            //assignPoints();
             waypointIndex = points.size()-1;
         }
         currentHealth = maxHealth;
@@ -140,7 +173,7 @@ class Minion {
         if(thisSimulation) {
             //System.out.println(pos);
             //System.out.println(pos);
-            d.drawMinion(p, pos, currentHealth, maxHealth, range);
+            //d.drawMinion(p, pos, currentHealth, maxHealth, range);
         }
 
         checkDamage();
@@ -439,7 +472,13 @@ class Minion {
         }
     }
 
-    
+    void setHealth(int value) {maxHealth = value;}
+    void setDamage(int value) {damage = value;}
+    void setMaxSpeed(int value) {maxSpeed = value;}
+    void setRange(int value) {range = value;}
+    void setAtkSpeed(float value) {fireRate = value;}
+
+
 
     int getHealth() {return maxHealth;}
 

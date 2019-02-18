@@ -60,29 +60,23 @@ public class Methods {
 
     }
 
-    public static boolean areAllTrue(ArrayList<Simulation> array)
-    {
-        for(Simulation b : array) if(!b.simFinished()) return false;
+    public static boolean areAllTrue(ArrayList<Simulation> array) {
+        for (Simulation b : array) if (!b.simFinished()) return false;
         return true;
     }
 
-    public static ArrayList<Minion> sortMinions(ArrayList<Minion> minions) {
-
-
-        return minions;
-    }
 
     public static ArrayList<Minion> buildScoredMinions(ArrayList<Minion> minList) {
         int scoreTotal = 0;
         ArrayList<Minion> sortedMinions = new ArrayList<>();
-        for (Minion m: minList) {
+        for (Minion m : minList) {
             scoreTotal += m.getDamageDealt();
         }
-        for (Minion m: minList) {
-            m.setFitness((m.getDamageDealt()/scoreTotal)*100);
+        for (Minion m : minList) {
+            m.setFitness((m.getDamageDealt() / scoreTotal) * 100);
         }
-        for (Minion m: minList) {
-            for(int x = 0; x <= m.getFitness(); x++) {
+        for (Minion m : minList) {
+            for (int x = 0; x <= m.getFitness(); x++) {
                 sortedMinions.add(m);
             }
         }
@@ -101,12 +95,65 @@ public class Methods {
         return offSpring;
     }
 
-    static ArrayList<Minion> mutateMinions(ArrayList<Minion> minList, int mutLevel) {
+    static void mutateMinions(PApplet p, ArrayList<Minion> minList, float mutLevel) {
+        for (Minion m : minList) {
 
-        return minList;
+            int pointsChanged = 0;
+            int pointsToChange = (int) Math.floor(25 / mutLevel);
+            //boolean statChanged = false;
+            while (pointsChanged < pointsToChange) {
+                float r = p.random(76);
+                if (r < 5 && m.getSpeed() - 1 >= 1) {//Minion Speed
+                    m.setMaxSpeed(m.getSpeed() - 1);
+                    pointsChanged++;
+                }
+                if (5 <= r && r < 25 && m.getHealth() - 10 >= 10) {//Minion Health
+                    m.setHealth(m.getHealth() - 10);
+                    pointsChanged++;
+                }
+                if (25 <= r && r < 45 && m.getDamage() - 10 >= 10) {// Minion Damage
+                    m.setDamage(m.getDamage() - 10);
+                    pointsChanged++;
+                }
+                if (45 <= r && r < 65 && m.getRange() - 10 >= 10) {// Minion Range
+                    m.setRange(m.getRange() - 10);
+                    pointsChanged++;
+                }
+                if (65 <= r && r < 75 && m.getAtkSpeed() - 1 >= 1) {//Minion atk speed
+                    m.setAtkSpeed(m.getAtkSpeed() - 1);
+                    pointsChanged++;
+                }
+            }
+            while (pointsChanged > 0) {
+                float r = p.random(76);
+                if (r < 5 && m.getSpeed() + 1 <= 5) {//Minion Speed
+                    m.setMaxSpeed(m.getSpeed() + 1);
+                    pointsChanged--;
+                }
+                if (5 <= r && r < 25 && m.getHealth() + 10 <= 200) {//Minion Health
+                    m.setHealth(m.getHealth() + 10);
+                    pointsChanged--;
+                }
+                if (25 <= r && r < 45 && m.getDamage() + 10 <= 200) {// Minion Damage
+                    m.setDamage(m.getDamage() + 10);
+                    pointsChanged--;
+                }
+                if (45 <= r && r < 65 && m.getRange() + 10 <= 200) {// Minion Range
+                    m.setRange(m.getRange() + 10);
+                    pointsChanged--;
+                }
+                if (65 <= r && r < 75 && m.getAtkSpeed() + 1 <= 10) {//Minion atk speed
+                    m.setAtkSpeed(m.getAtkSpeed() + 10);
+                    pointsChanged--;
+                }
+            }
+
+
+        }
+
     }
 
-    private static Object deepClone(Object object) {
+    static Object deepClone(Object object) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -120,7 +167,7 @@ public class Methods {
         }
     }
 
-    public static Minion copyMinion(PApplet p, Minion m){
+    public static Minion copyMinion(PApplet p, Minion m) {
         int bMaxHealth = (int) deepClone(m.getHealth());
         int bMaxSpeed = (int) deepClone(m.getSpeed());
         int bRange = (int) deepClone(m.getRange());
@@ -131,21 +178,13 @@ public class Methods {
         return new Minion(p, bMaxHealth, bMaxSpeed, bRange, bDamage, bFireRate, bDamageDealt);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    static ArrayList<Minion> copyMinions(PApplet p, ArrayList<Minion> ListOfMinions) {
+        ArrayList<Minion> newMinionList = new ArrayList<>();
+        for(Minion m: ListOfMinions) {
+            newMinionList.add(copyMinion(p, m));
+        }
+        return newMinionList;
+    }
 
 
 }

@@ -57,7 +57,7 @@ public class Tower {
     void tick() {
         checkDamage();
         if (thisSimulation) {
-            d.drawTower(p, pos, currentHealth, maxHealth, range);
+            //d.drawTower(p, pos, currentHealth, maxHealth, range);
         }
 
         PVector target = setTarget();
