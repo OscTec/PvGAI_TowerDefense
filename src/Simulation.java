@@ -84,7 +84,7 @@ public class Simulation {
                 leftProjectiles.remove(pro);
                 return;
             } else {
-                pro.drawProjectile(p);//To be removed after testing
+                //pro.drawProjectile(p);//To be removed after testing
                 pro.tick(p);
             }
         }
@@ -93,7 +93,7 @@ public class Simulation {
                 rightProjectiles.remove(pro);
                 return;
             } else {
-                pro.drawProjectile(p);//To be removed after testing
+//                pro.drawProjectile(p);//To be removed after testing
                 pro.tick(p);
             }
         }
@@ -149,6 +149,7 @@ public class Simulation {
             //m.drawMinion();
             //System.out.println(m.getPos());
             m.tick(p);
+            //System.out.println(rightMinions);
         }
         if (leftMinionsDead && rightMinionsDead) {
             //Environment.unpause();
@@ -180,11 +181,16 @@ public class Simulation {
     }
 
     boolean simFinished() {
-        if (leftMinionsDead && rightMinionsDead) {
+        if (rightMinionsDead) {
             return true;
         } else {
             return false;
         }
+//        if (leftMinionsDead && rightMinionsDead) {
+//            return true;
+//        } else {
+//            return false;
+//        }
 
     }
 

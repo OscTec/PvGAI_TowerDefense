@@ -13,7 +13,11 @@ public class Methods {
         PVector seekThis = new PVector();
         double lowestDistance = Settings.maxDistance;
         for (Minion m : targets) {
+            if(m == null) {
+                return seekThis;
+            }
             float d = pos.dist(m.getPos());
+
             if (d < lowestDistance) {
                 lowestDistance = d;
                 seekThis = m.getPos();
@@ -73,7 +77,12 @@ public class Methods {
             scoreTotal += m.getDamageDealt();
         }
         for (Minion m : minList) {
-            m.setFitness((m.getDamageDealt() / scoreTotal) * 100);
+            if(m.getDamageDealt() == 0) {
+                m.setFitness(0);
+            } else {
+                m.setFitness((m.getDamageDealt() / scoreTotal) * 100);
+            }
+
         }
         for (Minion m : minList) {
             for (int x = 0; x <= m.getFitness(); x++) {
@@ -84,22 +93,37 @@ public class Methods {
     }
 
     public static Minion breedMinions(PApplet p, Minion m1, Minion m2) {
-        int newHealth = ((int) deepClone(m1.getHealth()) + (int) deepClone(m2.getHealth())) / 2;
-        int newSpeed = ((int) deepClone(m1.getSpeed()) + (int) deepClone(m2.getSpeed())) / 2;
-        int newRange = ((int) deepClone(m1.getRange()) + (int) deepClone(m2.getRange())) / 2;
-        int newDamage = ((int) deepClone(m1.getDamage()) + (int) deepClone(m2.getDamage())) / 2;
-        float newAtkSpeed = ((float) deepClone(m1.getAtkSpeed()) + (float) deepClone(m2.getAtkSpeed())) / 2;
+        int newHealth = roundDown(((int) deepClone(m1.getHealth()) + (int) deepClone(m2.getHealth())) / 2);
+        int newSpeed = roundDown((int) deepClone(m1.getSpeed()) + (int) deepClone(m2.getSpeed()) / 2);
+        int newRange = roundDown((int) deepClone(m1.getRange()) + (int) deepClone(m2.getRange()) / 2);
+        int newDamage = roundDown(((int) deepClone(m1.getDamage()) + (int) deepClone(m2.getDamage()) / 2));
+        float newAtkSpeed = roundDown((((float) deepClone(m1.getAtkSpeed()) + (float) deepClone(m2.getAtkSpeed()))) / 2);
 
 
         Minion offSpring = new Minion(p, newHealth, newSpeed, newRange, newDamage, newAtkSpeed);
         return offSpring;
     }
 
+    static int roundDown(int num) {
+        if(num%5 == 0 && num%10 != 0) {
+            return num-5;
+        } else {
+            return num;
+        }
+    }
+
+    static float roundDown(float num) {
+        if(num%0.5f == 0 && num%1 != 0) {
+            return num-0.5f;
+        }
+        return num;
+    }
+
     static void mutateMinions(PApplet p, ArrayList<Minion> minList, float mutLevel) {
         for (Minion m : minList) {
 
             int pointsChanged = 0;
-            int pointsToChange = (int) Math.floor(25 / mutLevel);
+            int pointsToChange = (int) Math.floor(25 * mutLevel);
             //boolean statChanged = false;
             while (pointsChanged < pointsToChange) {
                 float r = p.random(76);

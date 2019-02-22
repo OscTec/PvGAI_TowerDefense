@@ -18,7 +18,7 @@ public class Stats {
 
     private static int towerHealth = 1000;
     private static int towerDamage = 50;
-    private static int towerRange = 100;
+    private static int towerRange = 200;
     private static float towerAtkSpeed = 2;
 
     private static int hqHealth = 2000;

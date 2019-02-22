@@ -48,6 +48,12 @@ class Environment {
     ArrayList<Minion> oldGen = new ArrayList<>();
     ArrayList<Minion> newGen = new ArrayList<>();
 
+    GeneticAlgorithm GA;
+    static int spawnCounter = 0;
+
+    static boolean gameRunning = false;
+    static boolean simsRunning = false;
+
 
     void setup(PApplet p) {
         this.p = p;
@@ -63,6 +69,9 @@ class Environment {
         //buildMinions();
         buildTowers();
         buildHQ();
+        GA = new GeneticAlgorithm(p, topLanePoints, midLanePoints, btmLanePoints, playerHQ, aiHQ, playerTowers, aiTowers);
+        gameRunning = true;
+        GA.start();
     }
 
     void reset() {
@@ -87,8 +96,8 @@ class Environment {
         checkPause();
         if (pause) {
             if(g1 == null) {
-                g1 = new GeneticAlgorithm(p, topLanePoints, midLanePoints, btmLanePoints, playerHQ, aiHQ, playerTowers, aiTowers);
-                g1.start();
+                //g1 = new GeneticAlgorithm(p, topLanePoints, midLanePoints, btmLanePoints, playerHQ, aiHQ, playerTowers, aiTowers);
+                //g1.start();
             }
 
 
@@ -103,14 +112,18 @@ class Environment {
             setLeftAI();
             if (playerHQ.checkDead()) {
                 Stats.setAiWon(true);
+
                 System.out.println("AI Wins");
+                gameRunning = false;
             } else {
                 playerHQ.tick();
             }
 
             if (aiHQ.checkDead()) {
                 Stats.setPlayerWon(true);
+
                 System.out.println("Player Wins");
+                gameRunning = false;
             } else {
                 aiHQ.tick();
             }
@@ -161,9 +174,16 @@ class Environment {
 //                buildMinions();
 //                sw.reset();
 //            }
-            if (waitTimer.elapsedTime() >= 5f && leftMinionsDead && rightMinionsDead) {
+            //if (waitTimer.elapsedTime() >= 5f && leftMinionsDead && rightMinionsDead) {
+            if (waitTimer.elapsedTime() >= 5f) {
                 buildMinions();
-                //sw.reset();
+                GA.buildSimulation();
+                simsRunning = true;
+                //GA.run();
+                //GA.running = true;
+                //GA.run();
+                //spawnCounter++;
+                waitTimer.reset();
             }
             for (Projectile pro : playerProjectiles) {
                 if (!pro.projectileAlive()) {
@@ -215,6 +235,7 @@ class Environment {
             for (Minion m : aiMinions) {
 
                 if (m.checkDead()) {
+                    /*
                     if (ai.testMinion(m)) {
                         int health = (int) deepClone(m.getHealth());
                         int speed = (int) deepClone(m.getSpeed());
@@ -224,6 +245,7 @@ class Environment {
                         ai.saveMinion(p, health, speed, range, damage, atkSpeed);
                         ai.modStats();
                     }
+                    */
                     aiMinions.remove(m);
                     return;
                 }
@@ -341,14 +363,14 @@ class Environment {
         playerTowers.add(new Tower(p, new PVector(p.width * 0.1f, p.height * 0.15f), true));
         playerTowers.add(new Tower(p, new PVector(p.width * 0.3f, p.height * 0.15f), true));
         playerTowers.add(new Tower(p, new PVector(p.width * 0.2f, p.height * 0.5f), true));
-        playerTowers.add(new Tower(p, new PVector(p.width * 0.4f, p.height * 0.5f), true));
+        playerTowers.add(new Tower(p, new PVector(p.width * 0.3f, p.height * 0.5f), true));
         playerTowers.add(new Tower(p, new PVector(p.width * 0.1f, p.height * 0.85f), true));
         playerTowers.add(new Tower(p, new PVector(p.width * 0.3f, p.height * 0.85f), true));
 
         aiTowers.add(new Tower(p, new PVector(p.width * 0.9f, p.height * 0.15f), false));
         aiTowers.add(new Tower(p, new PVector(p.width * 0.7f, p.height * 0.15f), false));
         aiTowers.add(new Tower(p, new PVector(p.width * 0.8f, p.height * 0.5f), false));
-        aiTowers.add(new Tower(p, new PVector(p.width * 0.6f, p.height * 0.5f), false));
+        aiTowers.add(new Tower(p, new PVector(p.width * 0.7f, p.height * 0.5f), false));
         aiTowers.add(new Tower(p, new PVector(p.width * 0.9f, p.height * 0.85f), false));
         aiTowers.add(new Tower(p, new PVector(p.width * 0.7f, p.height * 0.85f), false));
 

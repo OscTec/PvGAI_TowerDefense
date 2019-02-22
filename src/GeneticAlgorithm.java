@@ -7,10 +7,11 @@ public class GeneticAlgorithm implements Runnable {
     private Thread t;
     private String threadName = "Sim";
 
-    private boolean running = true;
+    //boolean running = false;
+    private int timesRun = 0;
     PApplet p;
     private ArrayList<Simulation> sims = new ArrayList<>();
-    private int numOfSims = 2;
+    private int numOfSims = 1;
     private Minion bestMinion;
     private ArrayList<Minion> oldGen = new ArrayList<>();
     private ArrayList<Minion> newGen = new ArrayList<>();
@@ -23,6 +24,11 @@ public class GeneticAlgorithm implements Runnable {
     private ArrayList<Tower> playerTowers;
     private ArrayList<Tower> aiTowers;
 
+    private Stopwatch sw = new Stopwatch();
+    private Stopwatch simWatch = new Stopwatch();
+
+
+
     GeneticAlgorithm(PApplet p, ArrayList<PVector> topLanePoints, ArrayList<PVector> midLanePoints, ArrayList<PVector> btmLanePoints, Headquarters playerHQ, Headquarters aiHQ, ArrayList<Tower> playerTowers, ArrayList<Tower> aiTowers) {
         this.p = p;
         this.topLanePoints = topLanePoints;
@@ -32,18 +38,55 @@ public class GeneticAlgorithm implements Runnable {
         this.aiHQ = aiHQ;
         this.playerTowers = playerTowers;
         this.aiTowers = aiTowers;
-        buildSimulation();
+        //buildSimulation();
 
     }
+    /*
+    public void run() {
+        System.out.println("Sim run method");
+        //while(Environment.gameRunning) {
+            //System.out.println("Game running");
+            if(!running && timesRun <= Environment.spawnCounter) {
+                buildSimulation();
+                running = true;
+            }
+            while (running) {
+                runSims();
+            }
+
+            //buildsims
+            //set running to true
+            //call runSims
+
+        //}
+
+        System.out.println("Finished sims");
+        //Environment.unpause();
+
+    }
+    */
 
     public void run() {
-        //System.out.println("Running " +  threadName );
-        //buildSimulation();
-        while (running) {
-            runSims();
+        while(Environment.gameRunning) {
+            if(sw.elapsedTime() >= 5f) {
+                System.out.println(Environment.simsRunning);
+                sw.reset();
+            }
+            //System.out.println(Environment.simsRunning);
+            //System.out.println("Game running");
+            if(Environment.simsRunning) {
+                System.out.println(Environment.simsRunning);
+                while(Environment.simsRunning) {
+                    if(simWatch.elapsedTime() >= 1f) {
+                        System.out.println("Sim running");
+                        simWatch.reset();
+                    }
+
+                    runSims();
+                }
+            }
+
         }
-        System.out.println("Finished sims");
-        Environment.unpause();
 
     }
 
@@ -62,10 +105,15 @@ public class GeneticAlgorithm implements Runnable {
                     oldGen.add(Methods.copyMinion(p, m));
                 }
             }
+            //comment out  between comments to have elite minion stats stay on
+            if(bestMinion != null) {
+                bestMinion.resetDamageDealt();
+            }
+            //
             for (Minion m : oldGen) {
                 if (bestMinion == null || m.getDamageDealt() > bestMinion.getDamageDealt()) {
                     bestMinion = Methods.copyMinion(p, m);
-                    System.out.println(bestMinion.getHealth() + " " + bestMinion.getSpeed() + " " + bestMinion.getRange() + " " + bestMinion.getDamage() + " " + bestMinion.getAtkSpeed());
+                    //System.out.println(bestMinion.getHealth() + " " + bestMinion.getSpeed() + " " + bestMinion.getRange() + " " + bestMinion.getDamage() + " " + bestMinion.getAtkSpeed());
                 }
             }
             Stats.setAiMinionHealthValue(bestMinion.getHealth());
@@ -83,16 +131,21 @@ public class GeneticAlgorithm implements Runnable {
                 float y = p.random(midGen.size());
                 newGen.add(Methods.breedMinions(p, midGen.get((int) x), midGen.get((int) y)));
             }
-            Methods.mutateMinions(p, newGen, 5);
+            Methods.mutateMinions(p, newGen, 0.05f);
             oldGen.clear();
             midGen.clear();
             oldGen = Methods.copyMinions(p, newGen);
             newGen.clear();
-            running = false;
-            Environment.unpause();
+            sims.clear();
+            timesRun++;
+            Environment.simsRunning = false;
+            //running = false;
+            System.out.println("Sims finished");
+            //Environment.unpause();
         } else {
             for (Simulation sim : sims) {
                 sim.tick();
+                //System.out.println("Sim tick");
             }
         }
     }
@@ -100,18 +153,19 @@ public class GeneticAlgorithm implements Runnable {
     void buildSimulation() {
         System.out.println("BuildSimulation");
         if(oldGen.isEmpty()) {
-            for (int counter = 0; counter <= numOfSims; counter++) {
+            for (int counter = 0; counter < numOfSims; counter++) {
                 Headquarters leftHQ = copyHQ(p, playerHQ.getPos(), playerHQ.getCurrentHealth(), playerHQ.getPlayer());
                 Headquarters rightHQ = copyHQ(p, aiHQ.getPos(), aiHQ.getCurrentHealth(), aiHQ.getPlayer());
                 sims.add(new Simulation(p, playerTowers, aiTowers, leftHQ, rightHQ, topLanePoints, midLanePoints, btmLanePoints));
             }
         } else {
-            for (int counter = 0; counter <= oldGen.size(); counter = counter + 3) {
+            for (int counter = 0; counter < oldGen.size() - 1; counter = counter + 3) {
                 Headquarters leftHQ = copyHQ(p, playerHQ.getPos(), playerHQ.getCurrentHealth(), playerHQ.getPlayer());
                 Headquarters rightHQ = copyHQ(p, aiHQ.getPos(), aiHQ.getCurrentHealth(), aiHQ.getPlayer());
                 sims.add(new Simulation(p, playerTowers, aiTowers, leftHQ, rightHQ, topLanePoints, midLanePoints, btmLanePoints, oldGen.get(counter), oldGen.get(counter+1), oldGen.get(counter+2)));
             }
         }
+        //System.out.println(sims);
 
     }
 

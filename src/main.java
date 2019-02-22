@@ -81,6 +81,14 @@ public class main extends PApplet {
         setup();
     }
 
+    /*
+    Current bugs
+    best minion nt allocated correctly - FIXED
+    stats going over limits
+    stat number not whole - FIXED
+    not all minions get put in next gen - FIXED
+     */
+
 
 
 }

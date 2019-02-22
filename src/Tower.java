@@ -117,8 +117,6 @@ public class Tower {
                 }
             }
         } else {
-
-
             if (player) {
                 for (Minion m : Environment.getAiMinions()) {
                     float d = pos.dist(m.getPos());
