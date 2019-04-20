@@ -52,6 +52,77 @@ class StatChange {
     }
 
     void playerMinionHealthDecrease() {
+        if(Stats.getpHltPoints() - 1 >= 1 ) {
+            Stats.setpHltPoints(-1);
+            playerPointsUsed--;
+        }
+    }
+
+    void playerMinionHealthIncrease() {
+        if(Stats.getpHltPoints() + 1 <= 20 && playerPointsUsed < maxPoints) {
+            Stats.setpHltPoints(1);
+            playerPointsUsed++;
+        }
+    }
+
+    void playerMinionDamageDecrease() {
+        if(Stats.getpDmgPoints() - 1 >= 1) {
+            Stats.setpDmgPoints(-1);
+            playerPointsUsed--;
+        }
+    }
+
+    void playerMinionDamageIncrease() {
+        if(Stats.getpDmgPoints() + 1 <= 20 && playerPointsUsed < maxPoints) {
+            Stats.setpDmgPoints(1);
+            playerPointsUsed++;
+        }
+    }
+
+    void playerMinionSpeedDecrease() {
+        if(Stats.getpSpdPoints() - 1 >= 1) {
+            Stats.setpSpdPoints(-1);
+            playerPointsUsed--;
+        }
+    }
+
+    void playerMinionSpeedIncrease() {
+        if(Stats.getpSpdPoints() + 1 <= 5 && playerPointsUsed < maxPoints) {
+            Stats.setpSpdPoints(1);
+            playerPointsUsed++;
+        }
+    }
+
+    void playerMinionRangeDecrease() {
+        if(Stats.getpRngPoints() - 1 >= 1) {
+            Stats.setpRngPoints(-1);
+            playerPointsUsed--;
+        }
+    }
+
+    void playerMinionRangeIncrease() {
+        if(Stats.getpRngPoints() + 10 <= 20 && playerPointsUsed < maxPoints) {
+            Stats.setpRngPoints(1);
+            playerPointsUsed++;
+        }
+    }
+
+    void playerMinionAtkSpeedDecrease() {
+        if(Stats.getpAtsPoints() - 1 >= 1) {
+            Stats.setpAtsPoints(-1);
+            playerPointsUsed--;
+        }
+    }
+
+    void playerMinionAtkSpeedIncrease() {
+        if(Stats.getpAtsPoints() + 1 <= 3 && playerPointsUsed < maxPoints) {
+            Stats.setpAtsPoints(1);
+            playerPointsUsed++;
+        }
+    }
+
+    /*
+    void playerMinionHealthDecrease() {
         if(Stats.getPlayerMinionHealth() - 10 >= 10 ) {
             Stats.setPlayerMinionHealth(-10);
             playerPointsUsed--;
@@ -120,6 +191,7 @@ class StatChange {
             playerPointsUsed++;
         }
     }
+    */
 
     public static int getPlayerPointsUsed() {
         return playerPointsUsed;

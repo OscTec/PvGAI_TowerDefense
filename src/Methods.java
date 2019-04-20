@@ -64,13 +64,13 @@ public class Methods {
 
     }
 
-    public static boolean areAllTrue(ArrayList<Simulation> array) {
+    static boolean areAllTrue(ArrayList<Simulation> array) {
         for (Simulation b : array) if (!b.simFinished()) return false;
         return true;
     }
 
 
-    public static ArrayList<Minion> buildScoredMinions(ArrayList<Minion> minList) {
+    static ArrayList<Minion> buildScoredMinions(ArrayList<Minion> minList) {
         int scoreTotal = 0;
         ArrayList<Minion> sortedMinions = new ArrayList<>();
         for (Minion m : minList) {
@@ -82,7 +82,6 @@ public class Methods {
             } else {
                 m.setFitness((m.getDamageDealt() / scoreTotal) * 100);
             }
-
         }
         for (Minion m : minList) {
             for (int x = 0; x <= m.getFitness(); x++) {
@@ -92,17 +91,48 @@ public class Methods {
         return sortedMinions;
     }
 
-    public static Minion breedMinions(PApplet p, Minion m1, Minion m2) {
-        int newHealth = roundDown(((int) deepClone(m1.getHealth()) + (int) deepClone(m2.getHealth())) / 2);
+    static Minion breedMinions(PApplet p, Minion m1, Minion m2) {
+        int newHltPoints = roundDown((int) deepClone((m1.getHltPoints() + m2.getHltPoints())/2));
+        int newSpdPoints = roundDown((int) deepClone((m1.getSpdPoints() + m2.getSpdPoints())/2));
+        int newRngPoints = roundDown((int) deepClone((m1.getRngPoints() + m2.getRngPoints())/2));
+        int newDmgPoints = roundDown((int) deepClone((m1.getDmgPoints() + m2.getDmgPoints())/2));
+        int newAtsPoints = roundDown((int) deepClone((m1.getAtsPoints() + m2.getAtsPoints())/2));
+
+        if(newHltPoints + newSpdPoints + newRngPoints + newDmgPoints + newAtsPoints < Stats.getMaxSkillPoints()) {
+            while(newHltPoints + newSpdPoints + newRngPoints + newDmgPoints + newAtsPoints < Stats.getMaxSkillPoints()) {
+                float r = p.random(69);
+                if (r < 5 && newSpdPoints + 1 <= 5) {//Minion Speed
+                    newSpdPoints++;
+                }
+                if (5 <= r && r < 25 && newHltPoints + 1 <= 20) {//Minion Health
+                    newHltPoints++;
+                }
+                if (25 <= r && r < 45 && newDmgPoints + 1 <= 20) {// Minion Damage
+                    newDmgPoints++;
+                }
+                if (45 <= r && r < 65 && newRngPoints + 1 <= 20) {// Minion Range
+                    newRngPoints++;
+                }
+                if (65 <= r && r < 68 && newAtsPoints + 1 <= 3) {//Minion atk speed
+                    newAtsPoints++;
+                }
+            }
+        }
+
+        /*
+        int newHealth = roundDown(((int) deepClone(m1.getHealth()) + (int) deepClone(m2.getHealth())) / 2);//
         int newSpeed = roundDown((int) deepClone(m1.getSpeed()) + (int) deepClone(m2.getSpeed()) / 2);
         int newRange = roundDown((int) deepClone(m1.getRange()) + (int) deepClone(m2.getRange()) / 2);
         int newDamage = roundDown(((int) deepClone(m1.getDamage()) + (int) deepClone(m2.getDamage()) / 2));
         float newAtkSpeed = roundDown((((float) deepClone(m1.getAtkSpeed()) + (float) deepClone(m2.getAtkSpeed()))) / 2);
+        */
 
-
-        Minion offSpring = new Minion(p, newHealth, newSpeed, newRange, newDamage, newAtkSpeed);
+        Minion offSpring = new Minion(p, newHltPoints, newSpdPoints, newRngPoints, newDmgPoints, newAtsPoints);
         return offSpring;
     }
+
+
+
 
     static int roundDown(int num) {
         if(num%5 == 0 && num%10 != 0) {
@@ -121,10 +151,61 @@ public class Methods {
 
     static void mutateMinions(PApplet p, ArrayList<Minion> minList, float mutLevel) {
         for (Minion m : minList) {
-
             int pointsChanged = 0;
             int pointsToChange = (int) Math.floor(25 * mutLevel);
             //boolean statChanged = false;
+            while (pointsChanged < pointsToChange) {
+                float r = p.random(69);
+                if (r < 5 && m.getSpdPoints() - 1 >= 1) {//Minion Speed
+                    m.setSpdPoints(m.getSpdPoints() - 1);
+                    pointsChanged++;
+                }
+                if (5 <= r && r < 25 && m.getHltPoints() - 1 >= 1) {//Minion Health
+                    m.setHltPoints(m.getHltPoints() - 1);
+                    pointsChanged++;
+                }
+                if (25 <= r && r < 45 && m.getDmgPoints() - 1 >= 1) {// Minion Damage
+                    m.setDmgPoints(m.getDmgPoints() - 1);
+                    pointsChanged++;
+                }
+                if (45 <= r && r < 65 && m.getRngPoints() - 1 >= 1) {// Minion Range
+                    m.setRngPoints(m.getRngPoints() - 1);
+                    pointsChanged++;
+                }
+                if (65 <= r && r < 68 && m.getAtsPoints() - 1 >= 1) {//Minion atk speed
+                    m.setAtsPoints(m.getAtsPoints() - 1);
+                    pointsChanged++;
+                }
+            }
+            while (pointsChanged > 0) {
+                float r = p.random(69);
+                if (r < 5 && m.getSpdPoints() + 1 <= 5) {//Minion Speed
+                    m.setSpdPoints(m.getSpdPoints() + 1);
+                    pointsChanged--;
+                }
+                if (5 <= r && r < 25 && m.getHltPoints() + 1 <= 20) {//Minion Health
+                    m.setHltPoints(m.getHltPoints() + 1);
+                    pointsChanged--;
+                }
+                if (25 <= r && r < 45 && m.getDmgPoints() + 1 <= 20) {// Minion Damage
+                    m.setDmgPoints(m.getDmgPoints() + 1);
+                    pointsChanged--;
+                }
+                if (45 <= r && r < 65 && m.getRngPoints() + 1 <= 20) {// Minion Range
+                    m.setRngPoints(m.getRngPoints() + 1);
+                    pointsChanged--;
+                }
+                if (65 <= r && r < 68 && m.getAtsPoints() + 1 <= 3) {//Minion atk speed
+                    m.setAtsPoints(m.getAtsPoints() + 1);
+                    pointsChanged--;
+                }
+            }
+        }
+    }
+
+
+
+    /*
             while (pointsChanged < pointsToChange) {
                 float r = p.random(76);
                 if (r < 5 && m.getSpeed() - 1 >= 1) {//Minion Speed
@@ -167,15 +248,11 @@ public class Methods {
                     pointsChanged--;
                 }
                 if (65 <= r && r < 75 && m.getAtkSpeed() + 1 <= 10) {//Minion atk speed
-                    m.setAtkSpeed(m.getAtkSpeed() + 10);
+                    m.setAtkSpeed(m.getAtkSpeed() + 1);
                     pointsChanged--;
                 }
             }
-
-
-        }
-
-    }
+            */
 
     static Object deepClone(Object object) {
         try {
@@ -191,7 +268,18 @@ public class Methods {
         }
     }
 
-    public static Minion copyMinion(PApplet p, Minion m) {
+    static Minion copyMinion(PApplet p, Minion m) {
+
+        int bHltPoints = (int) deepClone(m.getHltPoints());
+        int bSpdPoints = (int) deepClone(m.getSpdPoints());
+        int bRngPoints = (int) deepClone(m.getRngPoints());
+        int bDmgPoints = (int) deepClone(m.getDmgPoints());
+        int bAtsPoints = (int) deepClone(m.getAtsPoints());
+        int bDamageDealt = (int) deepClone(m.getDamageDealt());
+
+        return new Minion(p, bHltPoints, bSpdPoints, bRngPoints, bDmgPoints, bAtsPoints, bDamageDealt);
+
+        /*
         int bMaxHealth = (int) deepClone(m.getHealth());
         int bMaxSpeed = (int) deepClone(m.getSpeed());
         int bRange = (int) deepClone(m.getRange());
@@ -200,6 +288,7 @@ public class Methods {
         int bDamageDealt = (int) deepClone(m.getDamageDealt());
 
         return new Minion(p, bMaxHealth, bMaxSpeed, bRange, bDamage, bFireRate, bDamageDealt);
+        */
     }
 
     static ArrayList<Minion> copyMinions(PApplet p, ArrayList<Minion> ListOfMinions) {

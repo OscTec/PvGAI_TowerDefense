@@ -5,7 +5,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Simulation {
@@ -131,7 +130,7 @@ public class Simulation {
         for (Minion m : rightMinions) {
 
             if (m.checkDead()) {
-                finishedMinions.add(copyMinion(p, m.getHealth(), m.getSpeed(), m.getRange(), m.getDamage(), m.getAtkSpeed(), m.getDamageDealt()));
+                finishedMinions.add(copyMinion(p, m.getHltPoints(), m.getSpdPoints(), m.getRngPoints(), m.getDmgPoints(), m.getAtsPoints(), m.getDamageDealt()));
                 //bestMinion = copyMinion(p, m.getHealth(), m.getSpeed(), m.getRange(), m.getDamage(), m.getAtkSpeed(), m.getDamageDealt());
                 //System.out.println("Right minion dead");
 //                if (ai.testMinion(m)) {
@@ -171,9 +170,9 @@ public class Simulation {
     }
 
     void buildMinions(Minion m1, Minion m2, Minion m3) {
-        rightMinions.add(new Minion(p, new PVector(p.width - 130, p.height / 2f), topLane, this, false, m1.getHealth(), m1.getSpeed(), m1.getAtkSpeed(), m1.getRange(), m1.getDamage()));
-        rightMinions.add(new Minion(p, new PVector(p.width - 130, p.height / 2f), midLane, this, false, m2.getHealth(), m2.getSpeed(), m2.getAtkSpeed(), m2.getRange(), m2.getDamage()));
-        rightMinions.add(new Minion(p, new PVector(p.width - 130, p.height / 2f), btmLane, this, false, m3.getHealth(), m3.getSpeed(), m3.getAtkSpeed(), m3.getRange(), m3.getDamage()));
+        rightMinions.add(new Minion(p, new PVector(p.width - 130, p.height / 2f), topLane, this, false, m1.getHltPoints(), m1.getSpdPoints(), m1.getAtsPoints(), m1.getRngPoints(), m1.getDmgPoints()));
+        rightMinions.add(new Minion(p, new PVector(p.width - 130, p.height / 2f), midLane, this, false, m2.getHltPoints(), m2.getSpdPoints(), m2.getAtsPoints(), m2.getRngPoints(), m2.getDmgPoints()));
+        rightMinions.add(new Minion(p, new PVector(p.width - 130, p.height / 2f), btmLane, this, false, m3.getHltPoints(), m3.getSpdPoints(), m3.getAtsPoints(), m3.getRngPoints(), m3.getDmgPoints()));
 
         leftMinions.add(new Minion(p, new PVector(100, p.height / 2f), topLane, this, true));
         leftMinions.add(new Minion(p, new PVector(100, p.height / 2f), midLane, this, true));
@@ -193,6 +192,19 @@ public class Simulation {
 //        }
 
     }
+    /*
+    void addRightProjectile(PVector position, PVector velocity, int damage, int range) {
+        PVector bPos = (PVector) deepClone(position);
+        PVector bVel = (PVector) deepClone(velocity);
+        rightProjectiles.add(new Projectile(bPos, bVel, damage, range));
+    }
+
+    void addLeftProjectile(PVector position, PVector velocity, int damage, int range) {
+        PVector bPos = (PVector) deepClone(position);
+        PVector bVel = (PVector) deepClone(velocity);
+        leftProjectiles.add(new Projectile(bPos, bVel, damage, range));
+    }
+    */
 
     void addRightProjectile(PVector position, PVector velocity, int damage) {
         PVector bPos = (PVector) deepClone(position);
@@ -205,6 +217,7 @@ public class Simulation {
         PVector bVel = (PVector) deepClone(velocity);
         leftProjectiles.add(new Projectile(bPos, bVel, damage));
     }
+
 
     Minion getBestMinion() {
         return bestMinion;
@@ -235,14 +248,14 @@ public class Simulation {
         return new Tower(p, this, bPos, bPlayer, bHealth);
     }
 
-    Minion copyMinion(PApplet p, int maxHealth, int maxSpeed, int range, int damage, float fireRate, int damageDealt) {
-        int bMaxHealth = (int) deepClone(maxHealth);
-        int bMaxSpeed = (int) deepClone(maxSpeed);
-        int bRange = (int) deepClone(range);
-        int bDamage = (int) deepClone(damage);
-        float bFireRate = (float) deepClone(fireRate);
+    Minion copyMinion(PApplet p, int hltPoints, int spdPoints, int rngPoints, int dmgPoints, int atsPoints, int damageDealt) {
+        int bHltPoints = (int) deepClone(hltPoints);
+        int bSpdPoints = (int) deepClone(spdPoints);
+        int bRngPoints = (int) deepClone(rngPoints);
+        int bDmgPoints = (int) deepClone(dmgPoints);
+        int bAtsPoints = (int) deepClone(atsPoints);
         int bDamageDealt = (int) deepClone(damageDealt);
 
-        return new Minion(p, bMaxHealth, bMaxSpeed, bRange, bDamage, bFireRate, bDamageDealt);
+        return new Minion(p, bHltPoints, bSpdPoints, bRngPoints, bDmgPoints, bAtsPoints, bDamageDealt);
     }
 }

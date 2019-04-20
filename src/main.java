@@ -70,8 +70,6 @@ public class main extends PApplet {
         }
     }
 
-
-
     private void reset() {
         Stats.setPlayerWon(false);
         Stats.setAiWon(false);
@@ -81,16 +79,23 @@ public class main extends PApplet {
         setup();
     }
 
-    /*
-    Current bugs
-    best minion nt allocated correctly - FIXED
-    stats going over limits
-    stat number not whole - FIXED
-    not all minions get put in next gen - FIXED
-     */
-
-
-
 }
+
+
+
+/*
+To Do:
+Need
+    Tune the game settings
+    Tune fire rate of minions
+    AI has more than 25 points then goes down to 25
+    AI Starts with minimum points
+    Improve fitness score
+
+Like
+    GAI v GAI
+    Scoreboard
+
+ */
 
 

@@ -72,6 +72,15 @@ class Environment {
         GA = new GeneticAlgorithm(p, topLanePoints, midLanePoints, btmLanePoints, playerHQ, aiHQ, playerTowers, aiTowers);
         gameRunning = true;
         GA.start();
+        defaultAIStats();
+    }
+
+    void defaultAIStats() {
+        Stats.setAiHltPoints(8);//7
+        Stats.setAiAtsPoints(2);//1
+        Stats.setAiDmgPoints(10);//9
+        Stats.setAiRngPoints(7);//6
+        Stats.setAiSpdPoints(3);//2
     }
 
     void reset() {
@@ -256,6 +265,7 @@ class Environment {
 
     }
 
+    /*
     void runSims() {
         if (Methods.areAllTrue(sims)) {
             for (Simulation sim : sims) {
@@ -269,11 +279,18 @@ class Environment {
                     System.out.println(bestMinion.getHealth() + " " + bestMinion.getSpeed() + " " + bestMinion.getRange() + " " + bestMinion.getDamage() + " " + bestMinion.getAtkSpeed());
                 }
             }
-            Stats.setAiMinionHealthValue(bestMinion.getHealth());
-            Stats.setAiMinionSpeedValue(bestMinion.getSpeed());
-            Stats.setAiMinionRangeValue(bestMinion.getRange());
-            Stats.setAiMinionDamageValue(bestMinion.getDamage());
-            Stats.setAiMinionAtkSpeedValue(bestMinion.getAtkSpeed());
+            Stats.setAiMinionHealthValue(bestMinion.getHltPoints()*Stats.getAiMinionHealth());
+            Stats.setAiMinionSpeedValue(bestMinion.getSpdPoints()*Stats.getAiMinionSpeed());
+            Stats.setAiMinionRangeValue(bestMinion.getRngPoints()*Stats.getAiMinionRange());
+            Stats.setAiMinionDamageValue(bestMinion.getDmgPoints()*Stats.getAiMinionDamage());
+            Stats.setAiMinionAtkSpeedValue(bestMinion.getAtsPoints()*Stats.getAiMinionAtkSpeed());
+
+            //Stats.setAiMinionHealthValue(bestMinion.getHealth());
+            //Stats.setAiMinionSpeedValue(bestMinion.getSpeed());
+            //Stats.setAiMinionRangeValue(bestMinion.getRange());
+            //Stats.setAiMinionDamageValue(bestMinion.getDamage());
+            //Stats.setAiMinionAtkSpeedValue(bestMinion.getAtkSpeed());
+
             ArrayList<Minion> midGen;
 
             midGen = Methods.buildScoredMinions(oldGen);
@@ -294,23 +311,25 @@ class Environment {
             }
         }
     }
+    */
 
-    void buildSimulation() {
-        if(oldGen.isEmpty()) {
-            for (int counter = 0; counter <= numOfSims; counter++) {
-                Headquarters leftHQ = copyHQ(p, playerHQ.getPos(), playerHQ.getCurrentHealth(), playerHQ.getPlayer());
-                Headquarters rightHQ = copyHQ(p, aiHQ.getPos(), aiHQ.getCurrentHealth(), aiHQ.getPlayer());
-                sims.add(new Simulation(p, playerTowers, aiTowers, leftHQ, rightHQ, topLanePoints, midLanePoints, btmLanePoints));
-            }
-        } else {
-            for (int counter = 0; counter <= oldGen.size(); counter = counter + 3) {
-                Headquarters leftHQ = copyHQ(p, playerHQ.getPos(), playerHQ.getCurrentHealth(), playerHQ.getPlayer());
-                Headquarters rightHQ = copyHQ(p, aiHQ.getPos(), aiHQ.getCurrentHealth(), aiHQ.getPlayer());
-                sims.add(new Simulation(p, playerTowers, aiTowers, leftHQ, rightHQ, topLanePoints, midLanePoints, btmLanePoints, oldGen.get(counter), oldGen.get(counter+1), oldGen.get(counter+2)));
-            }
-        }
 
-    }
+//    void buildSimulation() {
+//        if(oldGen.isEmpty()) {
+//            for (int counter = 0; counter <= numOfSims; counter++) {
+//                Headquarters leftHQ = copyHQ(p, playerHQ.getPos(), playerHQ.getCurrentHealth(), playerHQ.getPlayer());
+//                Headquarters rightHQ = copyHQ(p, aiHQ.getPos(), aiHQ.getCurrentHealth(), aiHQ.getPlayer());
+//                sims.add(new Simulation(p, playerTowers, aiTowers, leftHQ, rightHQ, topLanePoints, midLanePoints, btmLanePoints));
+//            }
+//        } else {
+//            for (int counter = 0; counter <= oldGen.size(); counter = counter + 3) {
+//                Headquarters leftHQ = copyHQ(p, playerHQ.getPos(), playerHQ.getCurrentHealth(), playerHQ.getPlayer());
+//                Headquarters rightHQ = copyHQ(p, aiHQ.getPos(), aiHQ.getCurrentHealth(), aiHQ.getPlayer());
+//                sims.add(new Simulation(p, playerTowers, aiTowers, leftHQ, rightHQ, topLanePoints, midLanePoints, btmLanePoints, oldGen.get(counter), oldGen.get(counter+1), oldGen.get(counter+2)));
+//            }
+//        }
+//
+//    }
 
     void checkPause() {
         if (p.keyPressed && pauseSW.elapsedTime() >= 0.2f) {
@@ -319,7 +338,7 @@ class Environment {
                     pause = false;
                 } else {
                     pause = true;
-                    buildSimulation();
+                    //buildSimulation();
                 }
                 pauseSW.reset();
             }

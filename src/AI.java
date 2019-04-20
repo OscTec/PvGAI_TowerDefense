@@ -49,10 +49,10 @@ public class AI {
         }
     }
 
-    void saveMinion(PApplet p, int health, int speed, int range, int damage, float atkSpeed) {
-        minion1 = new Minion(p, health, speed, range, damage, atkSpeed);
+    void saveMinion(PApplet p, int hltPoints, int spdPoints, int rngPoints, int dmgPoints, int atsPoint) {
+        minion1 = new Minion(p, hltPoints, spdPoints, rngPoints, dmgPoints, atsPoint);
     }
-
+    /*
     void modStats() {
         float r = p.random(100);
         boolean statModded = false;
@@ -107,5 +107,7 @@ public class AI {
 
         }
 
+
     }
+    */
 }

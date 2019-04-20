@@ -1,6 +1,5 @@
 import processing.core.PApplet;
 import processing.core.PVector;
-
 import java.util.ArrayList;
 
 public class GeneticAlgorithm implements Runnable {
@@ -11,7 +10,7 @@ public class GeneticAlgorithm implements Runnable {
     private int timesRun = 0;
     PApplet p;
     private ArrayList<Simulation> sims = new ArrayList<>();
-    private int numOfSims = 1;
+    private int numOfSims = 30;
     private Minion bestMinion;
     private ArrayList<Minion> oldGen = new ArrayList<>();
     private ArrayList<Minion> newGen = new ArrayList<>();
@@ -38,7 +37,7 @@ public class GeneticAlgorithm implements Runnable {
         this.aiHQ = aiHQ;
         this.playerTowers = playerTowers;
         this.aiTowers = aiTowers;
-        //buildSimulation();
+        buildSimulation();
 
     }
     /*
@@ -91,7 +90,7 @@ public class GeneticAlgorithm implements Runnable {
     }
 
     void start () {
-        //System.out.println("Starting simulation");
+        System.out.println("Starting simulation");
         if (t == null) {
             t = new Thread (this, threadName);
             t.start ();
@@ -113,17 +112,31 @@ public class GeneticAlgorithm implements Runnable {
             for (Minion m : oldGen) {
                 if (bestMinion == null || m.getDamageDealt() > bestMinion.getDamageDealt()) {
                     bestMinion = Methods.copyMinion(p, m);
-                    //System.out.println(bestMinion.getHealth() + " " + bestMinion.getSpeed() + " " + bestMinion.getRange() + " " + bestMinion.getDamage() + " " + bestMinion.getAtkSpeed());
                 }
             }
+
+            Stats.setAiHltPoints(bestMinion.getHltPoints());
+            Stats.setAiSpdPoints(bestMinion.getSpdPoints());
+            Stats.setAiRngPoints(bestMinion.getRngPoints());
+            Stats.setAiDmgPoints(bestMinion.getDmgPoints());
+            Stats.setAiAtsPoints(bestMinion.getAtsPoints());
+            /*
+            Stats.setAiMinionHealthValue(bestMinion.getHltPoints()*Stats.getHltInc());
+            Stats.setAiMinionSpeedValue(bestMinion.getSpdPoints()*Stats.getSpdInc());
+            Stats.setAiMinionRangeValue(bestMinion.getRngPoints()*Stats.getRngInc());
+            Stats.setAiMinionDamageValue(bestMinion.getDmgPoints()*Stats.getDmgInc());
+            Stats.setAiMinionAtkSpeedValue(bestMinion.getAtsPoints()*Stats.getAtsInc());
+            */
+            /*
             Stats.setAiMinionHealthValue(bestMinion.getHealth());
             Stats.setAiMinionSpeedValue(bestMinion.getSpeed());
             Stats.setAiMinionRangeValue(bestMinion.getRange());
             Stats.setAiMinionDamageValue(bestMinion.getDamage());
             Stats.setAiMinionAtkSpeedValue(bestMinion.getAtkSpeed());
+            */
             ArrayList<Minion> midGen;
 
-            System.out.println("Best Minion has: " + bestMinion.getHealth() + " " + bestMinion.getDamage() + " " + bestMinion.getSpeed() + " " + bestMinion.getRange() + " " + bestMinion.getAtkSpeed());
+            System.out.println("Best Minion has: " + bestMinion.getHltPoints() + " " + bestMinion.getDmgPoints() + " " + bestMinion.getSpdPoints() + " " + bestMinion.getRngPoints() + " " + bestMinion.getAtsPoints());
 
             midGen = Methods.buildScoredMinions(oldGen);
             for (int counter = 0; counter <= (numOfSims * 3); counter++) {
@@ -141,6 +154,7 @@ public class GeneticAlgorithm implements Runnable {
             Environment.simsRunning = false;
             //running = false;
             System.out.println("Sims finished");
+            //System.out.println("Player damage " + Stats.getpDmgPoints() + " AI Damage " + Stats.getAiDmgPoints());
             //Environment.unpause();
         } else {
             for (Simulation sim : sims) {
@@ -165,8 +179,6 @@ public class GeneticAlgorithm implements Runnable {
                 sims.add(new Simulation(p, playerTowers, aiTowers, leftHQ, rightHQ, topLanePoints, midLanePoints, btmLanePoints, oldGen.get(counter), oldGen.get(counter+1), oldGen.get(counter+2)));
             }
         }
-        //System.out.println(sims);
-
     }
 
     Headquarters copyHQ(PApplet p, PVector pos, int currentHealth, boolean player) {

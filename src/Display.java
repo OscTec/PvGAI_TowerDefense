@@ -141,18 +141,18 @@ class Display {
         p.pushMatrix();
         p.fill(0, 102, 153);
         p.textSize(28);
-        p.text("Q- HP: " + Stats.getPlayerMinionHealth() + " W+", p.width*0.01f, 30);
-        p.text("E- DMG: " + Stats.getPlayerMinionDamage() + " R+", p.width*0.2f, 30);
-        p.text("T- SPD: " + Stats.getPlayerMinionSpeed() + " Y+", p.width*0.4f, 30);
-        p.text("U- Range: " + Stats.getPlayerMinionRange() + " I+", p.width*0.55f, 30);
-        p.text("O- Atk SPD: " + Stats.getPlayerMinionAtkSpeed() + " P+", p.width*0.75f, 30);
+        p.text("Q- HP: " + Stats.getpHltPoints() * Stats.getHltInc() + " W+", p.width*0.01f, 30);
+        p.text("E- DMG: " + Stats.getpDmgPoints() * Stats.getDmgInc() + " R+", p.width*0.2f, 30);
+        p.text("T- SPD: " + Stats.getpSpdPoints() * Stats.getSpdInc() + " Y+", p.width*0.4f, 30);
+        p.text("U- Range: " + Stats.getpRngPoints() * Stats.getRngInc() + " I+", p.width*0.55f, 30);
+        p.text("O- Atk SPD: " + Stats.getpAtsPoints() * Stats.getAtsInc() + " P+", p.width*0.75f, 30);
 
         p.fill(255, 10, 15);
-        p.text("HP: " + Stats.getAiMinionHealth(), p.width*0.01f, p.height - 10);
-        p.text("DMG: " + Stats.getAiMinionDamage(), p.width*0.2f, p.height - 10);
-        p.text("SPD: " + Stats.getAiMinionSpeed(), p.width*0.4f, p.height - 10);
-        p.text("Range: " + Stats.getAiMinionRange(), p.width*0.55f, p.height - 10);
-        p.text("Atk SPD: " + Stats.getAiMinionAtkSpeed(), p.width*0.75f, p.height - 10);
+        p.text("HP: " + Stats.getAiHltPoints() * Stats.getHltInc(), p.width*0.01f, p.height - 10);
+        p.text("DMG: " + Stats.getAiDmgPoints() * Stats.getDmgInc(), p.width*0.2f, p.height - 10);
+        p.text("SPD: " + Stats.getAiSpdPoints() * Stats.getSpdInc(), p.width*0.4f, p.height - 10);
+        p.text("Range: " + Stats.getAiRngPoints() * Stats.getRngInc(), p.width*0.55f, p.height - 10);
+        p.text("Atk SPD: " + Stats.getAiAtsPoints() * Stats.getAtsInc(), p.width*0.75f, p.height - 10);
         p.popMatrix();
     }
 

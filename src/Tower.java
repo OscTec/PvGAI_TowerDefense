@@ -17,6 +17,9 @@ public class Tower {
     private boolean thisSimulation = false;
     private Simulation sim;
 
+    private int tickCounter = 0;
+    private int lastShotTick = 0;
+
 
     Tower(PApplet p, PVector pos, int health, int damage, int range, float fireRate) {
         this.p = p;
@@ -57,6 +60,7 @@ public class Tower {
     void tick() {
         checkDamage();
         if (thisSimulation) {
+            tickCounter++;
             //d.drawTower(p, pos, currentHealth, maxHealth, range);
         }
 
@@ -64,15 +68,27 @@ public class Tower {
         float distance = PVector.dist(target, pos);
         if (thisSimulation) {
             if (player) {
+                if (distance <= range && (lastShotTick + (60/fireRate) <= tickCounter || lastShotTick == 0)) {
+                    sim.addLeftProjectile(pos, seek(target), damage);
+                    sw.reset();
+                }
+                /* old way
                 if (distance <= range && sw.elapsedTime() >= 1 / fireRate) {
                     sim.addLeftProjectile(pos, seek(target), damage);
                     sw.reset();
                 }
+                */
             } else {
+                if (distance <= range && (lastShotTick + (60/fireRate) <= tickCounter || lastShotTick == 0)) {
+                    sim.addRightProjectile(pos, seek(target), damage);
+                    sw.reset();
+                }
+                /*
                 if (distance <= range && sw.elapsedTime() >= 1 / fireRate) {
                     sim.addRightProjectile(pos, seek(target), damage);
                     sw.reset();
                 }
+                */
             }
         } else {
             if (player) {

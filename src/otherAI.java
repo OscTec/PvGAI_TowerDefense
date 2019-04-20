@@ -9,7 +9,34 @@ public class otherAI {
         this.p = p;
     }
 
+    void assignPoints() {
+        while(aiPointsUsed < maxPoints) {
+            float r = p.random(69);
+            if(r < 5 && Stats.getpSpdPoints() + 1 <= 5) {//Minion Speed
+                Stats.setpSpdPoints(1);
+                aiPointsUsed++;
+            }
+            if(5 <= r && r < 25 && Stats.getpHltPoints() + 1 <= 20) {//Minion Health
+                Stats.setpHltPoints(1);
+                aiPointsUsed++;
+            }
+            if(25 <= r && r < 45 && Stats.getpDmgPoints() + 1 <= 20) {// Minion Damage
+                Stats.setpDmgPoints(1);
+                aiPointsUsed++;
+            }
+            if(45 <= r && r < 65 && Stats.getpRngPoints() + 1 <= 20) {// Minion Range
+                Stats.setpRngPoints(1);
+                aiPointsUsed++;
+            }
+            if(65 <= r && r < 68 && Stats.getpAtsPoints() + 1 <= 3) {//Minion atk speed
+                Stats.setpAtsPoints(1);
+                aiPointsUsed++;
+            }
+        }
+    }
 
+
+    /*
     void assignPoints() {
         while(aiPointsUsed < maxPoints) {
             float r = p.random(76);
@@ -35,4 +62,5 @@ public class otherAI {
             }
         }
     }
+    */
 }

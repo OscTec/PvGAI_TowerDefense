@@ -7,7 +7,7 @@ class Projectile {
     PVector position;
     private PVector velocity;
     private float theta;
-    private int currentHealth = 200;
+    private int currentHealth = 40;
     private int maxHealth = 200;
     private int damage = 10;
 
@@ -17,18 +17,11 @@ class Projectile {
         this.theta = theta;
     }
 
-//    Projectile(PVector pos, PVector target) {
-//        this.position = pos;
-//        this.velocity = target;
-//    }
-
     Projectile(PVector pos, PVector target, int damage) {
         this.position = pos;
         this.velocity = target;
         this.damage = damage;
     }
-
-
 
     void tick(PApplet p) {
         velocity.setMag(5);
@@ -41,7 +34,7 @@ class Projectile {
     void drawProjectile(PApplet p) {d.drawProjectile(p, position);}
 
     boolean projectileAlive() {
-        if (currentHealth > 0) {
+        if (currentHealth >= 0) {
             return true;
         } else {
             return false;
