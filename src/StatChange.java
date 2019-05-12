@@ -4,7 +4,7 @@ class StatChange {
 
     PApplet p;
     private int maxPoints = 25;
-    private static int playerPointsUsed = 0;
+    private static int playerPointsUsed = 5;
     private Stopwatch sw = new Stopwatch();
 
     StatChange(PApplet p) {
@@ -101,7 +101,7 @@ class StatChange {
     }
 
     void playerMinionRangeIncrease() {
-        if(Stats.getpRngPoints() + 10 <= 20 && playerPointsUsed < maxPoints) {
+        if(Stats.getpRngPoints() + 1 <= 20 && playerPointsUsed < maxPoints) {
             Stats.setpRngPoints(1);
             playerPointsUsed++;
         }

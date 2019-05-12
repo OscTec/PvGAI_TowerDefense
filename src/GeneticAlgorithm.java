@@ -1,6 +1,7 @@
 import processing.core.PApplet;
 import processing.core.PVector;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class GeneticAlgorithm implements Runnable {
     private Thread t;
@@ -136,15 +137,18 @@ public class GeneticAlgorithm implements Runnable {
             */
             ArrayList<Minion> midGen;
 
-            System.out.println("Best Minion has: " + bestMinion.getHltPoints() + " " + bestMinion.getDmgPoints() + " " + bestMinion.getSpdPoints() + " " + bestMinion.getRngPoints() + " " + bestMinion.getAtsPoints());
+            System.out.println("Best Minion has: Health " + bestMinion.getHltPoints() + " Damage " + bestMinion.getDmgPoints() + " Speed " + bestMinion.getSpdPoints() + " Range " + bestMinion.getRngPoints() + " Atk Speed " + bestMinion.getAtsPoints());
 
             midGen = Methods.buildScoredMinions(oldGen);
             for (int counter = 0; counter <= (numOfSims * 3); counter++) {
-                float x = p.random(midGen.size());
-                float y = p.random(midGen.size());
-                newGen.add(Methods.breedMinions(p, midGen.get((int) x), midGen.get((int) y)));
+                //float x = p.random(midGen.size());
+                //float y = p.random(midGen.size());
+                Random rand = new Random();
+                int x = rand.nextInt(midGen.size());
+                int y = rand.nextInt(midGen.size());
+                newGen.add(Methods.breedMinions(p, midGen.get(x), midGen.get(y)));
             }
-            Methods.mutateMinions(p, newGen, 0.05f);
+            Methods.mutateMinions(p, newGen, 0.1f);
             oldGen.clear();
             midGen.clear();
             oldGen = Methods.copyMinions(p, newGen);

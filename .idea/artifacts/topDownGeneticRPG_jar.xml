@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="topDownGeneticRPG:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/topDownGeneticRPG_jar</output-path>
+    <root id="archive" name="topDownGeneticRPG.jar">
+      <element id="module-output" name="topDownGeneticRPG" />
+      <element id="extracted-dir" path="$USER_HOME$/Documents/Java libraries/processing-3.4/core/library/core.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

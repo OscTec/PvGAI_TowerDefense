@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Methods {
 
@@ -100,7 +101,9 @@ public class Methods {
 
         if(newHltPoints + newSpdPoints + newRngPoints + newDmgPoints + newAtsPoints < Stats.getMaxSkillPoints()) {
             while(newHltPoints + newSpdPoints + newRngPoints + newDmgPoints + newAtsPoints < Stats.getMaxSkillPoints()) {
-                float r = p.random(69);
+                //float r = p.random(69);
+                Random rand = new Random();
+                int r = rand.nextInt(69);
                 if (r < 5 && newSpdPoints + 1 <= 5) {//Minion Speed
                     newSpdPoints++;
                 }
@@ -155,7 +158,9 @@ public class Methods {
             int pointsToChange = (int) Math.floor(25 * mutLevel);
             //boolean statChanged = false;
             while (pointsChanged < pointsToChange) {
-                float r = p.random(69);
+                //float r = p.random(69);
+                Random rand = new Random();
+                int r = rand.nextInt(69);
                 if (r < 5 && m.getSpdPoints() - 1 >= 1) {//Minion Speed
                     m.setSpdPoints(m.getSpdPoints() - 1);
                     pointsChanged++;
@@ -178,7 +183,9 @@ public class Methods {
                 }
             }
             while (pointsChanged > 0) {
-                float r = p.random(69);
+                //float r = p.random(69);
+                Random rand = new Random();
+                int r = rand.nextInt(69);
                 if (r < 5 && m.getSpdPoints() + 1 <= 5) {//Minion Speed
                     m.setSpdPoints(m.getSpdPoints() + 1);
                     pointsChanged--;

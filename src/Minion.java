@@ -1,6 +1,7 @@
 import processing.core.PApplet;
 import processing.core.PVector;
 import java.util.ArrayList;
+import java.util.Random;
 
 class Minion {
     private ArrayList<PVector> wayPoints;
@@ -268,7 +269,7 @@ class Minion {
         if(!player) {
             this.hltPoints = Stats.getAiHltPoints();
             this.spdPoints = Stats.getAiSpdPoints();
-            this.atsPoints = Stats.getAiRngPoints();
+            this.atsPoints = Stats.getAiAtsPoints();
             this.rngPoints = Stats.getAiRngPoints();
             this.dmgPoints = Stats.getAiDmgPoints();
             //System.out.println(hltPoints + " " + spdPoints + " " + atsPoints + " " + rngPoints + " " + dmgPoints);
@@ -333,7 +334,7 @@ class Minion {
                 Projectile hit = Methods.collisionCheck(pos, Environment.getAiProjectiles());
                 if (hit != null) {
                     //System.out.println("Player minion hit");
-                    float r = p.random(2000);
+                    //float r = p.random(2000);
                     //System.out.println("Minion's health " + currentHealth + " damage done " + hit.getDamage() + " ID " + r);
                     currentHealth = currentHealth - hit.getDamage();
                     Environment.getAiProjectiles().remove(hit);
@@ -377,7 +378,7 @@ class Minion {
                     currentHealth = 0;
                 }
 
-                if (Distance <= (rngPoints*Stats.getRngInc()) && (lastShotTick + (600/(atsPoints*Stats.getAtsInc())) <= tickCounter || lastShotTick == 0)) {
+                if (Distance <= (rngPoints*Stats.getRngInc()) && (lastShotTick + (120/(atsPoints*Stats.getAtsInc())) <= tickCounter || lastShotTick == 0)) {
                     shotsFired++;
                     lastShotTick = tickCounter;
                     //Environment.addPlayerProjectile(pos, Methods.seek(pos, target), damage);
@@ -416,7 +417,7 @@ class Minion {
                     target = hTarget;
                     currentHealth = 0;
                 }
-                if (Distance <= (rngPoints*Stats.getRngInc()) && (lastShotTick + (600/(atsPoints*Stats.getAtsInc())) <= tickCounter || lastShotTick == 0)) {
+                if (Distance <= (rngPoints*Stats.getRngInc()) && (lastShotTick + (120/(atsPoints*Stats.getAtsInc())) <= tickCounter || lastShotTick == 0)) {
                     shotsFired++;
                     lastShotTick = tickCounter;
                     //Environment.addPlayerProjectile(pos, Methods.seek(pos, target), damage);
@@ -458,9 +459,11 @@ class Minion {
                     target = hTarget;
                 }
 
-                if (Distance <= (rngPoints*Stats.getRngInc()) && sw.elapsedTime() >= 10 / (atsPoints*Stats.getAtsInc())) {
+                if (Distance <= (rngPoints*Stats.getRngInc()) && sw.elapsedTime() >= 2 / ((atsPoints+0.1)*Stats.getAtsInc())) {
                     Environment.addPlayerProjectile(pos, Methods.seek(pos, target), dmgPoints*Stats.getDmgInc());
                     sw.reset();
+                    System.out.println("Best Minion has: Health " + hltPoints + " Damage " + dmgPoints + " Speed " + spdPoints + " Range " + rngPoints + " Atk Speed " + atsPoints);
+                    //System.out.println(atsPoints);
                 }
             } else {
                 PVector target;
@@ -487,10 +490,11 @@ class Minion {
                 }
 
 
-                if (Distance <= (rngPoints*Stats.getRngInc()) && sw.elapsedTime() >= 10 / ((atsPoints+0.1)*Stats.getAtsInc())) {
+                if (Distance <= (rngPoints*Stats.getRngInc()) && sw.elapsedTime() >= 2 / ((atsPoints+0.1)*Stats.getAtsInc())) {
                     shotsFired++;
                     Environment.addAiProjectile(pos, Methods.seek(pos, target), dmgPoints*Stats.getDmgInc());
                     sw.reset();
+                    System.out.println(atsPoints);
                 }
             }
         }
@@ -604,7 +608,9 @@ class Minion {
     }
     private void assignPoints() {
         while(pointsUsed < maxPoints) {
-            float r = p.random(69);
+            Random rand = new Random();
+            int r = rand.nextInt(69);
+            //float r = p.random(69);
             if(r < 5 && spdPoints + 1 <= 5) {//Minion Speed
                 spdPoints++;
                 //maxSpeed = maxSpeed + 1;

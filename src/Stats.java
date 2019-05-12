@@ -35,10 +35,10 @@ public class Stats {
     private static int aiMinionDamage = 10;
     private static float aiMinionAtkSpeed  = 1;
 
-    private static int towerHealth = 1000;
-    private static int towerDamage = 50;
-    private static int towerRange = 200;
-    private static float towerAtkSpeed = 2;
+    private static int towerHealth = 500;
+    private static int towerDamage = 100;
+    private static int towerRange = 100;
+    private static float towerAtkSpeed = 0.5f;
 
     private static int hqHealth = 2000;
 
